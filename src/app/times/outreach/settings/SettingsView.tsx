@@ -272,7 +272,7 @@ function AddDeskModal({ open, onClose, onSaved }: { open: boolean; onClose: () =
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder="caesar.outreach@gmail.com"
+              placeholder="you@yourdomain.com"
               className="w-full bg-transparent border-b ink-text px-1 py-1.5 text-[14px] font-display focus:outline-none"
               style={{ borderColor: 'var(--color-ink)', fontStyle: 'italic' }}
             />

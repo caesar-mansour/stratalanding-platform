@@ -1,11 +1,10 @@
 # StrataLanding security contact (RFC 9116)
 # https://stratalanding.com/.well-known/security.txt
 
-Contact: mailto:security@stratalanding.com
 Contact: mailto:stratalanding@gmail.com
+Expires: 2027-09-02T00:00:00.000Z
 Preferred-Languages: en
 Canonical: https://stratalanding.com/.well-known/security.txt
-Policy: https://stratalanding.com/SECURITY.md
 
 # We welcome good-faith reports. Please give us a reasonable window to remediate
 # before public disclosure, and do not access, modify, or exfiltrate other users' data.

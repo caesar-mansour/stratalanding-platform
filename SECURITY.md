@@ -6,7 +6,7 @@ StrataLanding takes the security of our platform and our clients' data seriously
 
 If you believe you've found a security vulnerability, please report it privately:
 
-- **Email:** security@stratalanding.com (or stratalanding@gmail.com)
+- **Email:** stratalanding@gmail.com
 - Include: a description, reproduction steps, affected URL/endpoint, and impact.
 - Please give us a reasonable window to remediate before any public disclosure.
 
