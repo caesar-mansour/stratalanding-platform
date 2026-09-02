@@ -1,0 +1,75 @@
+{
+  "base": "ops",
+  "shots": [
+    {
+      "id": "portal-dashboard",
+      "label": "Client portal — the seven-state ladder",
+      "proves": "deposit_paid",
+      "route": "/portal",
+      "src": "/ops/portal-dashboard.webp",
+      "w": 1440,
+      "h": 1400,
+      "kb": 53
+    },
+    {
+      "id": "portal-status",
+      "label": "Project timeline — milestones and next action",
+      "proves": "in_production",
+      "route": "/portal/status",
+      "src": "/ops/portal-status.webp",
+      "w": 1440,
+      "h": 1500,
+      "kb": 53
+    },
+    {
+      "id": "portal-milestones",
+      "label": "Delivery milestones — the two you approve",
+      "proves": "in_production",
+      "route": "/portal/milestones",
+      "src": "/ops/portal-milestones.webp",
+      "w": 1440,
+      "h": 1400,
+      "kb": 48
+    },
+    {
+      "id": "portal-chat",
+      "label": "Chat — revision rounds, unlocked at deposit",
+      "proves": "deposit_paid",
+      "route": "/portal/revisions",
+      "src": "/ops/portal-chat.webp",
+      "w": 1440,
+      "h": 1300,
+      "kb": 52
+    },
+    {
+      "id": "portal-brief",
+      "label": "The brief, as recorded",
+      "proves": "new",
+      "route": "/portal/brief",
+      "src": "/ops/portal-brief.webp",
+      "w": 1440,
+      "h": 1200,
+      "kb": 44
+    },
+    {
+      "id": "portal-package",
+      "label": "Scope and price, itemised",
+      "proves": "proposal_sent",
+      "route": "/portal/package",
+      "src": "/ops/portal-package.webp",
+      "w": 1440,
+      "h": 1500,
+      "kb": 51
+    },
+    {
+      "id": "admin-analytics",
+      "label": "StrataMetrics — first-party analytics, handed over at launch",
+      "proves": "launched",
+      "route": "/admin/analytics",
+      "src": "/ops/admin-analytics.webp",
+      "w": 1440,
+      "h": 1600,
+      "kb": 51
+    }
+  ]
+}

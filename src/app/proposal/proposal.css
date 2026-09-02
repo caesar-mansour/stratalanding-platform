@@ -1,0 +1,13 @@
+/* Tailwind utilities for the Proposal routes ONLY.
+   The global sheet (src/app/globals.css) excludes ./proposal via `@source not`, so
+   this sheet carries every utility those pages use, and it loads only on
+   /proposal/* (imported by src/app/proposal/layout.tsx).
+
+   WHY: these are logged-in surfaces no anonymous visitor ever reaches, and their
+   utilities were sitting in the stylesheet that render-blocks the marketing
+   homepage. Proposal alone accounted for ~3.9KB raw of it. Same pattern, same
+   reasoning and the same one-line shape as src/app/demos/demos.css.
+
+   Custom @theme tokens (bg-surface, text-text-muted, …) still come from the
+   global sheet, which loads here too. */
+@import "tailwindcss" source("./");

@@ -1,0 +1,13 @@
+/* Tailwind utilities for the Admin routes ONLY.
+   The global sheet (src/app/globals.css) excludes ./admin via `@source not`, so
+   this sheet carries every utility those pages use, and it loads only on
+   /admin/* (imported by src/app/admin/layout.tsx).
+
+   WHY: these are logged-in surfaces no anonymous visitor ever reaches, and their
+   utilities were sitting in the stylesheet that render-blocks the marketing
+   homepage. Admin alone accounted for ~35.9KB raw of it. Same pattern, same
+   reasoning and the same one-line shape as src/app/demos/demos.css.
+
+   Custom @theme tokens (bg-surface, text-text-muted, …) still come from the
+   global sheet, which loads here too. */
+@import "tailwindcss" source("./");

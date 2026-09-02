@@ -1,0 +1,681 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   NORTHLINE — the homepage craft layer.
+
+   Route-scoped: imported by src/app/page.tsx only, exactly like
+   strata/tokens.css is. Nothing in here may leak to /pricing, /brief, /demos
+   or any other route, so every rule is scoped under [data-nl] and the two
+   global-ish rules (::selection, anchor colour) are scoped too.
+
+   THE TRANSLATION. This is the Northline design wearing StrataLanding's brand:
+     Northline #EFEDE8 bone   -> #f6f3ec  (brand paper, from --color-strata-bone)
+     Northline #E4E1D9 panel  -> #ece6d7  (brand second sheet)
+     Northline #FBFAF7 paper  -> #fbf9f4  (ink on dark)
+     Northline #131210 band   -> #0a1730  (brand navy room)
+     Northline #16150F ink    -> #071022 / #0b1b3a (bedrock / brand navy)
+     Northline #D9451F ember  -> the accent, see below
+
+   THE ACCENT, AND WHY IT HAS TWO VALUES. Northline's ember is one hex because
+   it blazes on both its grounds. Brand cyan does not: #0891B2 on bone paper is
+   ~3.4:1 (fine for a rule or a mark, fails for text) and on navy it is
+   blue-on-blue. So the accent is ONE HUE AT TWO VALUES, matched to its ground:
+
+     light ground -> --nl-accent: #0891B2   (brand cyan, reads on paper)
+     dark  ground -> --nl-accent: #22D3EE   (brand cyan at blaze intensity)
+
+   [data-tone="dark"] does the swap. Every component just uses var(--nl-accent)
+   and is correct on both grounds. On paper the accent is FILLS AND RULES ONLY
+   — never type below 16px; navy ink carries all light-ground text.
+
+   THE TRACKING LAW. Negative at display (-0.05/-0.06em), crossing zero around
+   16-20px, POSITIVE below (+0.13em to +0.22em on mono uppercase). Carrying the
+   H1's negative tracking down to a 12px label is the most reliable amateur
+   tell there is. .nl-mono* below encode the positive half.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+[data-nl] {
+  /* ── grounds ── */
+  --nl-bone: #f6f3ec; /* page ground */
+  --nl-panel: #ece6d7; /* second light band */
+  --nl-paper: #fbf9f4; /* light text on dark; mockup page surface */
+  --nl-paper-2: #f2efe8; /* browser chrome bar, portal shell */
+
+  /* ── ink ── */
+  --nl-ink: #0b1b3a; /* primary text (brand navy) */
+  --nl-ink-band: #0a1730; /* dark section ground */
+  --nl-ink-deep: #071022; /* deepest band — the close */
+
+  /* ── the accent (light-ground value; dark swaps it below) ── */
+  --nl-accent: #0891b2;
+  --nl-accent-soft: rgba(8, 145, 178, 0.14);
+
+  /* ── signal ── */
+  --nl-green: #1f7a4d; /* live / paid / success */
+
+  /* ── text ladder ── */
+  --nl-body: rgba(11, 27, 58, 0.78);
+  --nl-meta: rgba(11, 27, 58, 0.56);
+  --nl-faint: rgba(11, 27, 58, 0.38);
+
+  /* ── hairlines. Same alpha ladder as the source, navy instead of warm black ── */
+  --nl-r06: rgba(11, 27, 58, 0.06);
+  --nl-r09: rgba(11, 27, 58, 0.09);
+  --nl-r11: rgba(11, 27, 58, 0.11);
+  --nl-r14: rgba(11, 27, 58, 0.14);
+  --nl-r16: rgba(11, 27, 58, 0.16);
+  --nl-r18: rgba(11, 27, 58, 0.18);
+  --nl-r20: rgba(11, 27, 58, 0.2);
+  --nl-r24: rgba(11, 27, 58, 0.24);
+
+  /* ── geometry ── */
+  --nl-gutter: 34px;
+  --nl-max: 1240px;
+
+  /* ── the signature easing. One curve carries the whole page. ── */
+  --nl-ease: cubic-bezier(0.16, 0.84, 0.28, 1);
+  --nl-ease-back: cubic-bezier(0.34, 1.42, 0.42, 1);
+
+  background: var(--nl-bone);
+  color: var(--nl-ink);
+  font-family: var(--font-body), system-ui, sans-serif;
+  font-size: 17px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+
+  /* THE PAGE IS BUILT OUT OF FULL-BLEED ROWS. Every ledger row escapes the
+     gutter with a negative margin so its rule runs edge to edge, and any one of
+     them landing a pixel wide of the viewport gives the whole document a
+     horizontal scrollbar — which on a phone reads as broken, not as design.
+     `clip` and not `hidden`: overflow:hidden on an ancestor silently kills
+     position:sticky, and the five pinned scenes depend on it. */
+  overflow-x: clip;
+}
+
+/* The gutter is 34px in the source, which is most of a phone's usable width
+   once both sides are paid for. It tightens below the stage breakpoint; every
+   bleed and every section reads it from the variable, so they stay in step. */
+@media (max-width: 640px) {
+  [data-nl] {
+    --nl-gutter: 20px;
+  }
+}
+
+/* Dark grounds re-point the ladder. Components never branch on tone. */
+[data-nl] [data-tone="dark"],
+[data-nl][data-tone="dark"] {
+  --nl-accent: #22d3ee;
+  --nl-accent-soft: rgba(34, 211, 238, 0.16);
+  --nl-body: rgba(251, 249, 244, 0.72);
+  --nl-meta: rgba(251, 249, 244, 0.52);
+  --nl-faint: rgba(251, 249, 244, 0.34);
+  --nl-r06: rgba(251, 249, 244, 0.07);
+  --nl-r09: rgba(251, 249, 244, 0.09);
+  --nl-r11: rgba(251, 249, 244, 0.11);
+  --nl-r14: rgba(251, 249, 244, 0.14);
+  --nl-r16: rgba(251, 249, 244, 0.16);
+  --nl-r18: rgba(251, 249, 244, 0.2);
+  --nl-r20: rgba(251, 249, 244, 0.22);
+  --nl-r24: rgba(251, 249, 244, 0.28);
+  color: var(--nl-paper);
+}
+
+[data-nl] *,
+[data-nl] *::before,
+[data-nl] *::after {
+  box-sizing: border-box;
+}
+[data-nl] p {
+  text-wrap: pretty;
+}
+[data-nl] ::selection {
+  background: var(--nl-accent);
+  color: var(--nl-ink-deep);
+}
+[data-nl] a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* ───────────────────────────────────────────────────────────────────────────
+   TYPE
+   Outfit stands in for Archivo (display), Inter for body, JetBrains Mono for
+   every label and digit, Fraunces italic for the one ornament. Every clamp()
+   is carried over from the source verbatim — the fluid scale IS the character.
+   ─────────────────────────────────────────────────────────────────────────── */
+
+[data-nl] .nl-display {
+  font-family: var(--font-heading), system-ui, sans-serif;
+  font-weight: 800;
+  letter-spacing: -0.055em;
+  line-height: 0.82;
+}
+[data-nl] .nl-h2 {
+  font-family: var(--font-heading), system-ui, sans-serif;
+  font-weight: 800;
+  letter-spacing: -0.05em;
+  line-height: 0.96;
+}
+[data-nl] .nl-h3 {
+  font-family: var(--font-heading), system-ui, sans-serif;
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  line-height: 1.08;
+}
+
+/* The single ornament. Six words on the whole page, plus the manifesto. */
+[data-nl] .nl-serif {
+  font-family: var(--font-nl-serif), Georgia, serif;
+  font-style: italic;
+  font-weight: 400;
+  letter-spacing: -0.015em;
+}
+
+/* The mono ladder — this is where tracking goes POSITIVE. */
+[data-nl] .nl-mono {
+  font-family: var(--font-nl-mono), ui-monospace, monospace;
+  font-weight: 400;
+  text-transform: uppercase;
+  font-size: 10.5px;
+  letter-spacing: 0.2em;
+  line-height: 1.4;
+}
+[data-nl] .nl-mono-lg {
+  font-family: var(--font-nl-mono), ui-monospace, monospace;
+  font-weight: 500;
+  text-transform: uppercase;
+  font-size: 13px;
+  letter-spacing: 0.2em;
+}
+[data-nl] .nl-mono-sm {
+  font-family: var(--font-nl-mono), ui-monospace, monospace;
+  font-weight: 400;
+  text-transform: uppercase;
+  font-size: 9.5px;
+  letter-spacing: 0.15em;
+  line-height: 1.4;
+}
+[data-nl] .nl-mono-xs {
+  font-family: var(--font-nl-mono), ui-monospace, monospace;
+  font-weight: 400;
+  text-transform: uppercase;
+  font-size: 9px;
+  letter-spacing: 0.16em;
+  line-height: 1.35;
+}
+[data-nl] .nl-num {
+  font-family: var(--font-nl-mono), ui-monospace, monospace;
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum" 1;
+}
+
+/* Every number on the page is tabular so counters never jitter. */
+[data-nl] [data-tnum],
+[data-nl] [data-anim="count"],
+[data-nl] [data-anim="daycount"],
+[data-nl] [data-anim="spinestat"],
+[data-nl] [data-anim="calcv"],
+[data-nl] [data-anim="calcr"],
+[data-nl] [data-anim="calcc"],
+[data-nl] [data-anim="calcgap"],
+[data-nl] [data-anim="calcnow"],
+[data-nl] [data-anim="calcafter"],
+[data-nl] [data-anim="calcpay"],
+[data-nl] [data-anim="clock"] {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum" 1;
+}
+
+/* ───────────────────────────────────────────────────────────────────────────
+   LAYOUT PRIMITIVES
+   ─────────────────────────────────────────────────────────────────────────── */
+
+[data-nl] .nl-section {
+  position: relative;
+  padding: 0 var(--nl-gutter) 118px;
+  border-top: 1px solid var(--nl-r14);
+}
+[data-nl] .nl-inner {
+  max-width: var(--nl-max);
+  margin: 0 auto;
+}
+/* Full-bleed escape — how every ledger row runs edge to edge. */
+[data-nl] .nl-bleed {
+  margin-left: calc(var(--nl-gutter) * -1);
+  margin-right: calc(var(--nl-gutter) * -1);
+}
+
+/* The 1px-gap rule grid: the GAP is the rule, cells carry no borders. */
+[data-nl] .nl-strip {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(158px, 1fr));
+  gap: 1px;
+  background: var(--nl-r16);
+  border-top: 1px solid var(--nl-r16);
+  border-bottom: 1px solid var(--nl-r16);
+}
+[data-nl] .nl-strip > * {
+  background: var(--nl-bone);
+  padding: 13px 18px 14px;
+}
+/* THE TECHNIQUE'S ONE FAILURE MODE. The rules ARE the 1px gaps, which means the
+   container's hairline colour is showing through from behind. Any cell the
+   items don't fill therefore renders as a solid grey block, not as empty space
+   — and auto-fit will happily leave two empty cells in the last row at some
+   viewport width. So a strip never uses auto-fit: it declares a column count
+   that divides its item count exactly, at every breakpoint.
+     -4  four items (hero instrument strip, spine counters)
+     -3  six items (the services grid, 2 rows x 3) */
+[data-nl] .nl-strip-4,
+[data-nl] .nl-strip-3 {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+@media (min-width: 900px) {
+  [data-nl] .nl-strip-3 {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  [data-nl] .nl-strip-4 {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+[data-nl] [data-tone="dark"] .nl-strip > * {
+  background: var(--nl-ink-band);
+}
+
+/* The universal row interaction: padding-left slides. Never a colour-only
+   hover, and never a transform — transform on hover is the amateur signature
+   this project has been burned by before. */
+[data-nl] .nl-row {
+  transition: padding-left 0.5s var(--nl-ease), background-color 0.4s ease;
+}
+[data-nl] .nl-row:hover {
+  padding-left: 20px;
+  background-color: var(--nl-r06);
+}
+
+/* Pure-CSS disclosure — no JS, no descendant selectors. */
+[data-nl] .nl-expand {
+  display: grid;
+  grid-template-rows: auto 0fr;
+  transition: grid-template-rows 0.6s var(--nl-ease), background-color 0.4s ease;
+}
+[data-nl] .nl-expand:hover,
+[data-nl] .nl-expand:focus-within {
+  grid-template-rows: auto 1fr;
+  background-color: var(--nl-r06);
+}
+[data-nl] .nl-expand > :last-child {
+  overflow: hidden;
+}
+
+/* ── THE STAGE ──────────────────────────────────────────────────────────────
+   A tall section with a sticky 100vh child. The section height is written
+   inline (the engine reads it to compute scene progress); the media query
+   below is what unpins the whole thing on anything that isn't a desktop
+   pointer with motion enabled.
+
+   This is deliberately CSS and not JS: media queries resolve before first
+   paint, so the server HTML is already correct and there is no hydration
+   snap. See Stage.tsx. */
+[data-nl] .nl-stage {
+  position: relative;
+}
+[data-nl] .nl-stage-sticky {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow: hidden;
+  display: grid;
+  place-items: center;
+}
+
+/* MOBILE / COARSE / REDUCED MOTION — the scene becomes an ordinary section.
+   No sticky, no scroll-scrub, no engine (NLRoot doesn't mount it here), and
+   every layer keeps its natural visible state. */
+@media (max-width: 1039px), (pointer: coarse), (prefers-reduced-motion: reduce) {
+  [data-nl] .nl-stage {
+    height: auto !important;
+  }
+  [data-nl] .nl-stage-sticky {
+    position: static;
+    height: auto;
+    overflow: visible;
+    display: block;
+    /* The engine writes these three inline during its exit fade. It never
+       mounts here, but a stale inline value from a resize across the
+       breakpoint would strand the section faded out. */
+    opacity: 1 !important;
+    filter: none !important;
+    transform: none !important;
+  }
+}
+
+/* THE BLUEPRINT GRID. 92px, at 5% ink, behind the hero. In the source it is a
+   layer inside the journey stage that the engine parallaxes; as a static ground
+   it costs nothing and it is a large part of why the opening reads as drafted
+   rather than typeset. */
+[data-nl] .nl-blueprint {
+  background-image: linear-gradient(to right, var(--nl-r06) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--nl-r06) 1px, transparent 1px);
+  background-size: 92px 92px;
+}
+
+/* Hero links. The source's hero carries no button stack — the fixed nav owns
+   the page's one CTA — so these are underlined text actions, not filled pills.
+   Underline via border-bottom rather than text-decoration so the offset is
+   controllable and the hover animates one property. */
+[data-nl] .nl-hero-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--nl-ink);
+  border-bottom: 1px solid var(--nl-r24);
+  padding-bottom: 3px;
+  transition: border-color 0.2s ease, color 0.2s ease;
+}
+[data-nl] .nl-hero-link:hover {
+  border-bottom-color: var(--nl-accent);
+  color: var(--nl-accent);
+}
+
+/* The spine's drawn path and its engine-positioned nodes only make sense while
+   the engine is running. Below the stage breakpoint it is replaced by a plain
+   list of the same four events — same content, no broken layout. */
+[data-nl] .nl-spine-fallback {
+  display: block;
+}
+@media (min-width: 1040px) and (pointer: fine) {
+  [data-nl] .nl-spine-fallback {
+    display: none;
+  }
+}
+@media (max-width: 1039px), (pointer: coarse), (prefers-reduced-motion: reduce) {
+  [data-nl] .nl-spine-nodes {
+    display: none;
+  }
+}
+
+/* Registration corner marks — 16px L-brackets at -15px offset. */
+[data-nl] .nl-reg::before,
+[data-nl] .nl-reg::after {
+  content: "";
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  pointer-events: none;
+}
+[data-nl] .nl-reg::before {
+  top: -15px;
+  left: -15px;
+  border-top: 1px solid var(--nl-r24);
+  border-left: 1px solid var(--nl-r24);
+}
+[data-nl] .nl-reg::after {
+  bottom: -15px;
+  right: -15px;
+  border-bottom: 1px solid var(--nl-r24);
+  border-right: 1px solid var(--nl-r24);
+}
+
+/* ───────────────────────────────────────────────────────────────────────────
+   CONTROLS
+   Radius ladder, closed set: 0 (rows, bands) / 2px (chips) / 3px (CTAs) /
+   4-6px (inner cards) / 10px (the browser frame, the ONLY large radius) /
+   50% (dots). No other value appears anywhere.
+   ─────────────────────────────────────────────────────────────────────────── */
+
+[data-nl] .nl-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 16px 26px;
+  border-radius: 3px;
+  border: 1px solid transparent;
+  font-family: var(--font-body), system-ui, sans-serif;
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  cursor: pointer;
+  background: var(--nl-accent);
+  color: var(--nl-ink-deep);
+  transition: background-color 0.4s ease, color 0.4s ease, border-color 0.2s ease;
+}
+[data-nl] .nl-cta:hover {
+  background: var(--nl-paper);
+  color: var(--nl-ink-deep);
+}
+[data-nl] .nl-cta-ghost {
+  background: transparent;
+  color: inherit;
+  border-color: var(--nl-r24);
+}
+[data-nl] .nl-cta-ghost:hover {
+  background: transparent;
+  border-color: currentColor;
+  color: inherit;
+}
+[data-nl] .nl-cta:focus-visible,
+[data-nl] a:focus-visible,
+[data-nl] button:focus-visible,
+[data-nl] input:focus-visible {
+  outline: 2px solid var(--nl-accent);
+  outline-offset: 2px;
+}
+
+[data-nl] .nl-chip {
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid var(--nl-r18);
+  border-radius: 2px;
+  padding: 5px 9px;
+  font-family: var(--font-nl-mono), ui-monospace, monospace;
+  font-size: 9.5px;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: var(--nl-meta);
+}
+
+[data-nl] input[type="range"] {
+  accent-color: var(--nl-accent);
+  width: 100%;
+  height: 4px;
+  cursor: grab;
+}
+[data-nl] input[type="range"]:active {
+  cursor: grabbing;
+}
+
+/* ───────────────────────────────────────────────────────────────────────────
+   MOTION
+   Everything scroll-driven is native CSS behind @supports, so a browser
+   without animation-timeline renders the page static and COMPLETE — nothing
+   is hidden by default. The reduced-motion block below is the same guarantee.
+   ─────────────────────────────────────────────────────────────────────────── */
+
+@keyframes nlRise {
+  from {
+    opacity: 0;
+    transform: translateY(105%);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes nlFade {
+  from {
+    opacity: 0;
+    transform: translateY(22px);
+    filter: blur(5px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+    filter: blur(0);
+  }
+}
+@keyframes nlRowIn {
+  from {
+    opacity: 0;
+    transform: translateX(-26px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes nlRule {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+@keyframes nlBlink {
+  0%,
+  49% {
+    opacity: 1;
+  }
+  50%,
+  100% {
+    opacity: 0;
+  }
+}
+@keyframes nlHeroLine {
+  from {
+    opacity: 0;
+    transform: translateY(115%);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes nlHeroFade {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes nlHeroRule {
+  from {
+    width: 0;
+  }
+  to {
+    width: 34px;
+  }
+}
+@keyframes nlHeroSpan {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+/* Hero intro — time-based, not scroll-based: it plays once on load. */
+[data-nl] [data-hline] {
+  animation: nlHeroLine 1.15s var(--nl-ease) both;
+}
+[data-nl] [data-hfade] {
+  animation: nlHeroFade 1.05s var(--nl-ease) both;
+}
+[data-nl] [data-hrule] {
+  animation: nlHeroRule 0.9s var(--nl-ease) 1.2s both;
+}
+[data-nl] [data-hspan] {
+  animation: nlHeroSpan 1.25s var(--nl-ease) 1.1s both;
+  transform-origin: 0 50%;
+}
+
+@supports (animation-timeline: view()) {
+  [data-nl] [data-reveal] {
+    animation: nlRise cubic-bezier(0.16, 0.84, 0.28, 1) both;
+    animation-timeline: view();
+    animation-range: entry 10% cover 26%;
+  }
+  [data-nl] [data-fade] {
+    animation: nlFade cubic-bezier(0.16, 0.84, 0.28, 1) both;
+    animation-timeline: view();
+    animation-range: entry 6% cover 28%;
+  }
+  [data-nl] [data-wm] {
+    animation: nlRise 1.05s cubic-bezier(0.16, 0.84, 0.28, 1) both;
+    animation-timeline: view();
+    animation-range: entry 0% cover 22%;
+  }
+  [data-nl] [data-rule] {
+    animation: nlRule 1.1s cubic-bezier(0.16, 0.84, 0.28, 1) both;
+    animation-timeline: view();
+    animation-range: entry 0% cover 16%;
+  }
+  [data-nl] [data-row] {
+    animation: nlRowIn 0.85s cubic-bezier(0.2, 0.9, 0.28, 1) both;
+    animation-timeline: view();
+    animation-range: entry 3% cover 19%;
+  }
+}
+
+/* Text that must be masked for a rise-from-below reveal. The padding/margin
+   pair keeps descenders visible without moving the baseline. */
+[data-nl] .nl-mask {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: bottom;
+  padding-bottom: 0.16em;
+  margin-bottom: -0.16em;
+}
+
+/* Grain. One inline SVG turbulence tile over the whole page. */
+[data-nl] .nl-grain {
+  position: fixed;
+  inset: 0;
+  z-index: 150;
+  pointer-events: none;
+  opacity: 0.5;
+  mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.86' numOctaves='3'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)' opacity='0.34'/%3E%3C/svg%3E");
+}
+
+/* The labelled cursor. Desktop, fine pointer, motion on — nothing else. */
+[data-nl] [data-nlcursor] {
+  display: none;
+}
+@media (pointer: fine) and (min-width: 1000px) {
+  [data-nl][data-nl-cursor="on"] {
+    cursor: none;
+  }
+  [data-nl][data-nl-cursor="on"] a,
+  [data-nl][data-nl-cursor="on"] button,
+  [data-nl][data-nl-cursor="on"] [data-cursor],
+  [data-nl][data-nl-cursor="on"] [data-cursor] * {
+    cursor: none;
+  }
+  [data-nl][data-nl-cursor="on"] [data-nlcursor] {
+    display: block;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-nl] [data-reveal],
+  [data-nl] [data-fade],
+  [data-nl] [data-rule],
+  [data-nl] [data-row],
+  [data-nl] [data-wm],
+  [data-nl] [data-hline],
+  [data-nl] [data-hfade],
+  [data-nl] [data-hrule],
+  [data-nl] [data-hspan] {
+    animation: none;
+  }
+  [data-nl] .nl-grain {
+    display: none;
+  }
+}

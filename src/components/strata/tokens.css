@@ -1,0 +1,787 @@
+/* ============================================================================
+   THE STRATA CUT — tokens.css (the world, as law)
+   Imported ONLY by the homepage route → its own route-scoped sheet.
+   Laws: navy/cyan retired · oxide = earth/craft · phosphor = alive/measured
+   (live-only) · two easings site-wide · no parallax/floats/blur-ins/scale-ins.
+   ========================================================================== */
+
+/* Color tokens live in globals.css @theme (Tailwind emits the utilities +
+   :root vars from there). This sheet is the route-scoped CRAFT layer and
+   only consumes them. Font vars come from strata/fonts.ts on the page root. */
+
+/* -- Authored easings — the ONLY two curves on the page ---------------------- */
+:root {
+  /* PRESSRUN easings: the platen (enter — fast, heavy, dead stop) and the
+     roller (exit/sweep — long momentum). PRESS BOOK §H6. Slots kept. */
+  --st-ease-enter: cubic-bezier(0.18, 0, 0.04, 1);
+  --st-ease-exit: cubic-bezier(0.42, 0, 0.16, 1);
+}
+
+/* -- Re-homed global craft rules (were hidden in the sp-* block; the S6 sweep
+      must not take the anchor law down with it) ------------------------------ */
+html {
+  scrollbar-gutter: stable;
+}
+section[id] {
+  scroll-margin-top: 88px;
+}
+
+/* ============================================================================
+   TYPE SCALE — few sizes, huge jumps. Monumental display ↔ tiny annotation.
+   ========================================================================== */
+.st-display {
+  font-family: var(--font-strata-display);
+  font-weight: 700; /* slot carries Fraunces Black (opsz 144, WONK) */
+  font-size: clamp(3rem, 6.9vw, 11rem); /* 2560 → ~176px: hot-metal scale */
+  line-height: 0.98;
+  letter-spacing: -0.005em;
+  text-wrap: balance;
+}
+.st-chapter {
+  font-family: var(--font-strata-display);
+  font-weight: 700;
+  font-size: clamp(2.1rem, 3.8vw, 5.5rem);
+  line-height: 1.02;
+  letter-spacing: -0.004em;
+  text-wrap: balance;
+}
+.st-price {
+  font-family: var(--font-strata-price);
+  font-weight: 900;
+  font-size: clamp(3.25rem, 5.4vw, 6.5rem);
+  line-height: 1;
+  font-variant-numeric: tabular-nums lining-nums;
+}
+.st-body {
+  font-family: var(--font-strata-body);
+  font-size: 1.0625rem;
+  line-height: 1.65;
+  max-width: 34rem;
+}
+.st-mono {
+  font-family: var(--font-strata-mono);
+  font-size: 0.6875rem; /* 11px */
+  line-height: 1.5;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  font-variant-numeric: tabular-nums;
+}
+.st-mono-sm {
+  font-family: var(--font-strata-mono);
+  font-size: 0.625rem; /* 10px */
+  line-height: 1.4;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ============================================================================
+   THE ATMOSPHERE — ABYSS EDITION. Pure CSS light: god-rays in the shallows,
+   depth gradients in the column, bioluminescent glow on live things.
+   No WebGL, no filters on scrolling elements; rays/gradients are static
+   painted layers (multi-stop = no banding, grain on top).
+   ========================================================================== */
+/* PRESSRUN: laid paper + the bed's column ticks (replaces the graticule) */
+.st-rays {
+  position: relative;
+}
+.st-rays::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    repeating-linear-gradient(0deg, rgba(11, 27, 58, 0.028) 0 1px, transparent 1px 6px),
+    repeating-linear-gradient(90deg, rgba(17, 17, 17, 0.045) 0 1px, transparent 1px 220px);
+}
+/* the ink room's faint texture (Act II) */
+.st-rays-deep::before {
+  background:
+    repeating-linear-gradient(0deg, rgba(246, 243, 236, 0.025) 0 1px, transparent 1px 7px);
+}
+
+/* the water column: layered depth gradients per band family */
+/* PRESSRUN: the shop floor — proof paper, warm daylight. */
+.st-column-shallow {
+  background: linear-gradient(180deg, #f6f3ec 0%, #f5f1e9 40%, #f3efe4 100%);
+}
+.st-column-shallow-2 {
+  background: linear-gradient(180deg, #f3efe4 0%, #f2eee1 45%, #f0ebdd 100%);
+}
+.st-column-shallow-3 {
+  background: linear-gradient(180deg, #f0ebdd 0%, #eee9d9 50%, #ede7d8 100%);
+}
+.st-column-mid {
+  background:
+    radial-gradient(46% 40% at 50% 0%, rgba(246, 243, 236, 0.09) 0%, rgba(34, 211, 238, 0.05) 40%, transparent 70%),
+    linear-gradient(180deg, #0e2142 0%, #0b1b3a 34%, #0a1730 100%);
+}
+.st-column-deep {
+  background:
+    radial-gradient(44% 38% at 50% 0%, rgba(246, 243, 236, 0.07) 0%, rgba(34, 211, 238, 0.04) 40%, transparent 70%),
+    linear-gradient(180deg, #0a1730 0%, #091430 45%, #081226 100%);
+}
+.st-column-floor {
+  background:
+    linear-gradient(180deg, #081226 0%, #071022 55%, #060e1e 100%);
+}
+/* LIVING WATER (D5): while the sim runs beneath, the deep columns go
+   slightly alpha so the water reads through. No-sim path stays opaque —
+   byte-identical to the shipped atmosphere. */
+[data-sim-active] .st-column-mid {
+  background:
+    radial-gradient(130% 100% at 50% -30%, rgba(34, 211, 238, 0.10) 0%, transparent 50%),
+    linear-gradient(180deg, rgba(20, 51, 95, 0.92) 0%, rgba(14, 42, 82, 0.92) 30%, rgba(12, 35, 71, 0.93) 64%, rgba(11, 27, 58, 0.94) 100%);
+}
+[data-sim-active] .st-column-deep {
+  background:
+    radial-gradient(120% 90% at 50% -25%, rgba(34, 211, 238, 0.05) 0%, transparent 45%),
+    linear-gradient(180deg, rgba(11, 27, 58, 0.92) 0%, rgba(9, 23, 49, 0.93) 40%, rgba(8, 20, 40, 0.94) 74%, rgba(6, 15, 31, 0.94) 100%);
+}
+[data-sim-active] .st-column-floor {
+  background:
+    radial-gradient(140% 110% at 50% -40%, rgba(8, 145, 178, 0.06) 0%, transparent 40%),
+    linear-gradient(180deg, rgba(8, 20, 40, 0.93) 0%, rgba(6, 13, 28, 0.94) 45%, rgba(5, 7, 13, 0.95) 100%);
+}
+
+/* THE ACT TRANSITION: the shop lights die — paper hands off into the ink room */
+.st-submersion {
+  background:
+    linear-gradient(180deg, #ede7d8 0%, #b9b2a0 18%, #6d6c6a 38%, #3a3f52 58%, #16223c 78%, #0a1730 100%);
+}
+
+/* THE MERIDIAN — the emission seam between bands (replaces WaterEdge waves) */
+.st-meridian {
+  height: 2px;
+  width: 100%;
+  background: linear-gradient(90deg,
+    rgba(34, 211, 238, 0) 0%,
+    rgba(34, 211, 238, 0.55) 18%,
+    rgba(8, 145, 178, 0.3) 52%,
+    rgba(34, 211, 238, 0.5) 82%,
+    rgba(34, 211, 238, 0) 100%);
+  box-shadow: 0 4px 22px rgba(34, 211, 238, 0.22);
+}
+
+/* bioluminescence: live things GLOW (cyan = light, not decoration) */
+.st-glow {
+  box-shadow:
+    0 0 18px rgba(34, 211, 238, 0.35),
+    0 0 60px rgba(34, 211, 238, 0.12);
+}
+.st-glow-soft {
+  box-shadow:
+    0 0 12px rgba(34, 211, 238, 0.22),
+    0 0 40px rgba(34, 211, 238, 0.08);
+}
+.st-glow-text {
+  text-shadow: 0 0 14px rgba(34, 211, 238, 0.55), 0 0 42px rgba(34, 211, 238, 0.22);
+}
+/* glass instrument plates for the deep (solid gradients, no backdrop-filter) */
+.st-plate-deep {
+  background: linear-gradient(168deg, rgba(20, 51, 95, 0.85) 0%, rgba(11, 27, 58, 0.92) 58%, rgba(8, 20, 40, 0.96) 100%);
+  border: 1px solid rgba(34, 211, 238, 0.16);
+  box-shadow:
+    inset 0 1px 0 rgba(234, 242, 247, 0.07),
+    0 24px 60px -32px rgba(0, 0, 0, 0.6);
+}
+.strata-world .st-btn-seam {
+  box-shadow: 0 0 22px rgba(34, 211, 238, 0.28), 0 8px 28px -12px rgba(8, 145, 178, 0.5);
+}
+
+/* ============================================================================
+   THE BORE — hero runway + porthole surface (DIRECTOR'S CUT D2).
+   CSS heights only (Cleave's law — zero CLS, no GSAP pin). Reduced motion
+   collapses the runway: the finished still, no dead scroll.
+   ========================================================================== */
+@media (min-width: 1024px) {
+  .st-bore-runway {
+    height: 220vh;
+  }
+}
+@media (min-width: 1024px) and (prefers-reduced-motion: reduce) {
+  .st-bore-runway {
+    height: auto;
+  }
+}
+/* the caustic shimmer — the still is never dead (all tiers, pure CSS) */
+.st-caustic-shimmer {
+  background: linear-gradient(
+    115deg,
+    transparent 20%,
+    rgba(34, 211, 238, 0.16) 38%,
+    rgba(103, 232, 249, 0.22) 50%,
+    rgba(34, 211, 238, 0.14) 62%,
+    transparent 80%
+  );
+  background-size: 250% 250%;
+  animation: st-caustic 7s ease-in-out infinite;
+  mix-blend-mode: screen;
+  pointer-events: none;
+}
+@keyframes st-caustic {
+  0%,
+  100% {
+    background-position: 0% 0%;
+  }
+  50% {
+    background-position: 100% 100%;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .st-caustic-shimmer {
+    animation: none;
+  }
+}
+
+/* ============================================================================
+   GRAIN — one pre-baked tile (public/strata/grain.png ≤4KB), never live
+   feTurbulence, never filter() on scrolling elements.
+   ========================================================================== */
+.st-grain {
+  position: relative;
+}
+.st-grain::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: url("/strata/grain.png") repeat;
+  opacity: 0.05;
+  pointer-events: none;
+}
+.st-grain-deep::after {
+  opacity: 0.07;
+}
+
+/* ============================================================================
+   THE CUT — the brand gesture. SCORE (seam draws) then OPEN (content reveals
+   beneath the incision). IO adds .is-cut once; reduced motion = already open.
+   ========================================================================== */
+.st-score {
+  position: relative;
+  height: 1px;
+  background: var(--color-strata-hairline);
+}
+.st-score::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--color-strata-seam);
+  transform: scaleX(0);
+  transform-origin: left;
+}
+.is-cut .st-score::before {
+  transition: transform 320ms var(--st-ease-enter);
+  transform: scaleX(1);
+}
+
+.st-open {
+  clip-path: inset(0 0 100% 0);
+  transform: translateY(12px);
+  opacity: 0.001;
+}
+.is-cut .st-open {
+  transition:
+    clip-path 400ms var(--st-ease-enter) 120ms,
+    transform 400ms var(--st-ease-enter) 120ms,
+    opacity 400ms var(--st-ease-enter) 120ms;
+  clip-path: inset(0 0 -8% 0);
+  transform: translateY(0);
+  opacity: 1;
+}
+
+/* Stagger steps for grouped opens (max 3 — restraint law) */
+.is-cut .st-open[data-cut-step="2"] { transition-delay: 220ms; }
+.is-cut .st-open[data-cut-step="3"] { transition-delay: 320ms; }
+
+/* DIRECTOR'S CUT reveal grammar — committed edges, not fades.
+   Driven by the same .is-cut beat; reduced-motion sees the finished still. */
+.st-open-wipe {
+  clip-path: inset(0 100% 0 0);
+  opacity: 0.001;
+}
+.is-cut .st-open-wipe {
+  transition:
+    clip-path 640ms var(--st-ease-enter) 120ms,
+    opacity 200ms linear 120ms;
+  clip-path: inset(0 0% 0 0);
+  opacity: 1;
+}
+.st-open-iris {
+  clip-path: circle(0% at 32% 40%);
+  opacity: 0.001;
+}
+.is-cut .st-open-iris {
+  transition:
+    clip-path 720ms var(--st-ease-enter) 140ms,
+    opacity 200ms linear 140ms;
+  clip-path: circle(142% at 32% 40%);
+  opacity: 1;
+}
+@media (prefers-reduced-motion: reduce) {
+  .st-open-wipe,
+  .st-open-iris {
+    clip-path: none;
+    opacity: 1;
+    transition: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .st-score::before { transform: scaleX(1); }
+  .st-open {
+    clip-path: none;
+    transform: none;
+    opacity: 1;
+    transition: none;
+  }
+}
+
+/* Buttons (.st-btn*) + nav link/bar chrome live in globals.css — the Navbar
+   renders on every marketing route and can't depend on this route-scoped
+   sheet. Inside the strata world, buttons speak Switzer. */
+.strata-world .st-btn {
+  font-family: var(--font-strata-ui);
+}
+
+/* ============================================================================
+   THE CORE RAIL — bore track, discrete FILL, water-table ink flip.
+   ========================================================================== */
+.st-rail-bore {
+  border: 1px solid var(--color-strata-hairline);
+  background: rgba(234, 242, 247, 0.05);
+  transition: border-color 200ms var(--st-ease-exit), background-color 200ms var(--st-ease-exit);
+}
+.st-rail-seg {
+  border: 0;
+  padding: 0;
+  background: transparent;
+}
+.st-rail-seg + .st-rail-seg {
+  border-top: 1px solid var(--color-strata-hairline);
+  transition: border-color 200ms var(--st-ease-exit);
+}
+.st-rail-fill {
+  transform-origin: top;
+  transition: transform 480ms var(--st-ease-enter);
+}
+.st-rail-readout {
+  color: var(--color-strata-ink-mute);
+  transition: color 200ms var(--st-ease-exit);
+}
+[data-rail-dark] .st-rail-bore {
+  border-color: var(--color-strata-hairline-deep);
+  background: rgba(234, 242, 247, 0.06);
+}
+[data-rail-dark] .st-rail-seg + .st-rail-seg {
+  border-top-color: var(--color-strata-hairline-deep);
+}
+[data-rail-dark] .st-rail-readout {
+  color: var(--color-strata-bone-mute);
+}
+@media (prefers-reduced-motion: reduce) {
+  .st-rail-fill { transition: none; }
+}
+
+/* ============================================================================
+   THE DEPTH LINE — mobile scroll-timeline path (fallback is rAF in JS).
+   ========================================================================== */
+@supports (animation-timeline: scroll()) {
+  .st-depthline-css {
+    transform-origin: left;
+    animation: st-depth-fill linear both;
+    animation-timeline: scroll(root);
+  }
+  @keyframes st-depth-fill {
+    from { transform: scaleX(0); }
+    to { transform: scaleX(1); }
+  }
+}
+
+/* ============================================================================
+   PERFECTION PASS — set-piece grammar (all driven by the .is-cut beat;
+   reduced motion sees every finished still).
+   ========================================================================== */
+/* THE SONAR SWEEP — a ping ring expands across the bores plot, twice */
+.st-sonar-sweep {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 20px;
+  height: 20px;
+  margin: -10px 0 0 -10px;
+  border: 1.5px solid rgba(34, 211, 238, 0.8);
+  border-radius: 50%;
+  opacity: 0;
+  pointer-events: none;
+}
+.is-cut .st-sonar-sweep {
+  animation: st-sonar 2.8s var(--st-ease-exit) 0.3s 2;
+}
+.is-cut .st-sonar-sweep[data-ping="2"] {
+  animation-delay: 1.1s;
+}
+@keyframes st-sonar {
+  0% { transform: scale(0.4); opacity: 0.9; }
+  70% { opacity: 0.25; }
+  100% { transform: scale(16); opacity: 0; }
+}
+
+/* THE LIVE REWRITE (ST.01) — the strike draws itself, then the fix rises */
+.st-strike {
+  position: relative;
+  display: inline-block;
+}
+.st-strike::after {
+  content: "";
+  position: absolute;
+  left: -1%;
+  right: -1%;
+  top: 52%;
+  height: 2px;
+  background: var(--color-strata-seam);
+  transform: scaleX(0);
+  transform-origin: left center;
+}
+.is-cut .st-strike::after {
+  transition: transform 520ms var(--st-ease-enter) 260ms;
+  transform: scaleX(1);
+}
+.st-stamp {
+  opacity: 0;
+  transform: rotate(-1.5deg) translateY(4px);
+}
+.is-cut .st-stamp {
+  transition: opacity 220ms linear 820ms, transform 220ms var(--st-ease-enter) 820ms;
+  opacity: 1;
+  transform: rotate(0deg) translateY(0);
+}
+
+/* THE SCORES PLAY (ST.03) — a cyan dot rides each easing curve */
+.st-score-dot {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  margin: -5px 0 0 -5px;
+  border-radius: 50%;
+  background: var(--color-strata-live);
+  box-shadow: 0 0 12px rgba(34, 211, 238, 0.8);
+  opacity: 0;
+  offset-rotate: 0deg;
+}
+.is-cut .st-score-dot {
+  animation: st-ride 1.6s cubic-bezier(0.2, 0, 0, 1) 0.5s forwards;
+}
+.is-cut .st-score-dot[data-curve="exit"] {
+  animation-timing-function: cubic-bezier(0.6, 0, 0.4, 1);
+  animation-delay: 1s;
+}
+@keyframes st-ride {
+  0% { offset-distance: 0%; opacity: 0; }
+  8% { opacity: 1; }
+  92% { opacity: 1; }
+  100% { offset-distance: 100%; opacity: 0.9; }
+}
+
+/* THE CORE LOG breathes — FAQ details open smoothly, with a cyan seam */
+.st-faq-body {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 360ms var(--st-ease-enter);
+}
+details[open] .st-faq-body {
+  grid-template-rows: 1fr;
+}
+.st-faq-body > div {
+  overflow: hidden;
+}
+details[open] .st-faq-seam {
+  border-left: 2px solid var(--color-strata-live);
+  padding-left: 18px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .st-sonar-sweep { animation: none !important; }
+  .st-strike::after { transform: scaleX(1); transition: none; }
+  .st-stamp { opacity: 1; transform: none; transition: none; }
+  .st-score-dot { animation: none !important; opacity: 0; }
+  .st-faq-body { transition: none; }
+}
+
+/* ============================================================================
+   THE LIVE PULSE — phosphor only. Paused off-screen via [data-live-paused].
+   ========================================================================== */
+@keyframes st-live-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.35; }
+}
+.st-live-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--color-strata-live);
+  animation: st-live-pulse 2.4s var(--st-ease-exit) infinite;
+}
+[data-live-paused] .st-live-dot { animation-play-state: paused; }
+/* live pulses hold still until the band has cut in */
+section:not(.is-cut) .st-live-dot { animation-play-state: paused; }
+@media (prefers-reduced-motion: reduce) {
+  .st-live-dot { animation: none; }
+}
+
+/* ============================================================================
+   THE PRESSRUN — SP1 grammar (PRESS BOOK §H7 + §I/SP1). Pressroom furniture:
+   plates, marks, stamps, the bed rail, the misregister. All tokens, no
+   improvised values.
+   ========================================================================== */
+/* the bed: the wide composition container (2560-first law) */
+.st-bed {
+  margin-inline: auto;
+  width: 100%;
+  max-width: 110rem; /* 1760px */
+  padding-inline: 1.5rem;
+}
+@media (min-width: 1024px) { .st-bed { padding-inline: 3.5rem; } }
+@media (min-width: 1920px) { .st-bed { padding-inline: 4.5rem; } }
+
+/* registration target */
+.pr-regmark {
+  position: relative;
+  width: 26px;
+  height: 26px;
+  border: 2px solid #111111;
+  border-radius: 9999px;
+}
+.pr-regmark::before,
+.pr-regmark::after { content: ""; position: absolute; background: #111111; }
+.pr-regmark::before { left: 50%; top: -7px; bottom: -7px; width: 2px; transform: translateX(-50%); }
+.pr-regmark::after { top: 50%; left: -7px; right: -7px; height: 2px; transform: translateY(-50%); }
+.pr-regmark.absolute, .pr-cropmark.absolute { position: absolute; }
+.pr-regmark[data-c] { border-color: var(--color-strata-seam); }
+.pr-regmark[data-c]::before, .pr-regmark[data-c]::after { background: var(--color-strata-seam); }
+
+/* crop mark (corner L) */
+.pr-cropmark { position: relative; width: 34px; height: 34px; }
+.pr-cropmark::before, .pr-cropmark::after { content: ""; position: absolute; background: #111111; }
+.pr-cropmark::before { width: 24px; height: 2px; }
+.pr-cropmark::after { width: 2px; height: 24px; }
+
+/* the misregister: ink text with its C plate offset; snaps home on
+   [data-registered] (SNAP: 120ms platen) */
+.pr-misreg { position: relative; display: inline-block; }
+.pr-misreg > .pr-misreg-c {
+  position: absolute;
+  left: var(--misreg-x, 5px);
+  top: var(--misreg-y, 4px);
+  color: var(--color-strata-live);
+  z-index: -1;
+  filter: blur(0.4px);
+  transition: left 120ms var(--st-ease-enter), top 120ms var(--st-ease-enter);
+}
+[data-registered] .pr-misreg > .pr-misreg-c { left: 0; top: 0; }
+
+/* the stamp */
+.pr-stamp {
+  display: inline-block;
+  border: 2px solid var(--color-strata-seam);
+  color: var(--color-strata-seam);
+  padding: 6px 12px;
+  transform: rotate(-2deg);
+  font-family: var(--font-strata-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  background: var(--color-strata-bone);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7);
+}
+
+/* density bar (vertical, margin furniture) */
+.pr-density { display: flex; flex-direction: column; }
+.pr-density i { display: block; width: 20px; height: 34px; margin-bottom: 2px; }
+
+/* the ink plate */
+.pr-plate {
+  background: var(--color-strata-deep1);
+  border: 1px solid #081428;
+  box-shadow: 0 24px 48px rgba(11, 27, 58, 0.24), inset 0 2px 0 rgba(255, 255, 255, 0.14);
+}
+
+/* the bed rail (steel strip carrying the ticks + the job slot) */
+.pr-rail {
+  background: #20242b;
+  box-shadow: inset 0 2px 0 rgba(255, 255, 255, 0.08), 0 -8px 30px rgba(11, 27, 58, 0.18);
+}
+
+/* press-cycle stations (right-margin furniture) */
+.pr-cycle { display: flex; flex-direction: column; justify-content: space-between; align-items: center; }
+.pr-cycle .st { writing-mode: vertical-rl; font-family: var(--font-strata-mono); font-size: 0.625rem; letter-spacing: 0.2em; color: var(--color-strata-ink-mute); text-transform: uppercase; }
+.pr-cycle .st[data-on] { color: var(--color-strata-seam); }
+.pr-cycle .ln { width: 2px; flex: 1; background: rgba(11, 27, 58, 0.15); margin: 10px 0; }
+
+/* ── SP4: the proof sheet + the registration snap ─────────────────────── */
+.pr-sheet {
+  position: relative;
+  background: var(--color-strata-paper2);
+  border: 1px solid rgba(11, 27, 58, 0.12);
+  box-shadow: 0 28px 56px rgba(11, 27, 58, 0.16), 0 6px 14px rgba(11, 27, 58, 0.08);
+}
+.pr-sheet::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: repeating-linear-gradient(0deg, rgba(11, 27, 58, 0.02) 0 1px, transparent 1px 7px);
+}
+.pr-sheet-pin {
+  position: absolute;
+  top: -9px;
+  left: 50%;
+  width: 16px;
+  height: 16px;
+  transform: translateX(-50%);
+  border-radius: 9999px;
+  background: var(--color-strata-seam);
+  box-shadow: 0 3px 8px rgba(11, 27, 58, 0.4);
+}
+/* the rewrite's registration underline — the C plate bar */
+.pr-underbar {
+  position: relative;
+  display: inline-block;
+}
+.pr-underbar::after {
+  content: "";
+  position: absolute;
+  left: 2px;
+  right: 2px;
+  bottom: 0.04em;
+  height: 5px;
+  background: var(--color-strata-seam);
+}
+
+/* ── SP2: the press job ticket ─────────────────────────────────────────── */
+.pr-ticket {
+  position: relative;
+  background: var(--color-strata-paper2);
+  border: 1px solid rgba(11, 27, 58, 0.18);
+  box-shadow: 0 10px 22px rgba(11, 27, 58, 0.08);
+  transition: box-shadow 180ms var(--st-ease-enter), transform 180ms var(--st-ease-enter);
+}
+.pr-ticket:hover { transform: translateY(-2px); box-shadow: 0 16px 30px rgba(11, 27, 58, 0.12); }
+.pr-ticket::before {
+  /* the punch hole */
+  content: "";
+  position: absolute;
+  left: 14px;
+  top: 14px;
+  width: 9px;
+  height: 9px;
+  border-radius: 9999px;
+  background: var(--color-strata-bone);
+  box-shadow: inset 0 1px 2px rgba(11, 27, 58, 0.35), 0 0 0 1.5px rgba(11, 27, 58, 0.25);
+}
+.pr-ticket::after {
+  /* the tear line */
+  content: "";
+  position: absolute;
+  left: 12px;
+  right: 12px;
+  bottom: 10px;
+  border-top: 2px dashed rgba(17, 17, 17, 0.18);
+}
+.pr-ticket[data-stamped] {
+  background:
+    linear-gradient(0deg, var(--color-strata-seam), var(--color-strata-seam)) ,
+    var(--color-strata-paper2);
+  background-blend-mode: normal;
+  background: color-mix(in srgb, var(--color-strata-seam) 10%, var(--color-strata-paper2));
+  border-color: var(--color-strata-seam);
+  box-shadow: 0 14px 28px rgba(8, 145, 178, 0.16);
+}
+.pr-ticket .pr-ticket-stamp {
+  position: absolute;
+  right: 12px;
+  top: 10px;
+  opacity: 0;
+  transform: rotate(-2deg) scale(0.9);
+  transition: opacity 120ms var(--st-ease-enter), transform 120ms var(--st-ease-enter);
+}
+.pr-ticket[data-stamped] .pr-ticket-stamp { opacity: 1; transform: rotate(-2deg) scale(1); }
+
+/* ── SP8: THE INK ROOM (Act II) ────────────────────────────────────────── */
+/* the hanging lamp: cord, shade, and the pool it throws on the proofs */
+.pr-lamp { position: absolute; top: 0; pointer-events: none; }
+.pr-lamp .cord {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  width: 2px;
+  height: 92px;
+  background: rgba(246, 243, 236, 0.22);
+}
+.pr-lamp .shade {
+  position: absolute;
+  left: 50%;
+  top: 88px;
+  transform: translateX(-50%);
+  width: 104px;
+  height: 46px;
+  background: #101826;
+  border-radius: 0 0 52px 52px;
+  box-shadow: inset 0 -8px 18px rgba(34, 211, 238, 0.32);
+}
+.pr-lamp .pool {
+  position: absolute;
+  left: 50%;
+  top: 112px;
+  transform: translateX(-50%);
+  width: 860px;
+  height: 1000px;
+  background: radial-gradient(
+    50% 46% at 50% 8%,
+    rgba(246, 243, 236, 0.15),
+    rgba(34, 211, 238, 0.09) 42%,
+    transparent 72%
+  );
+}
+.pr-lamp[data-bright] .pool {
+  background: radial-gradient(
+    52% 48% at 50% 8%,
+    rgba(246, 243, 236, 0.21),
+    rgba(34, 211, 238, 0.12) 42%,
+    transparent 72%
+  );
+}
+
+/* the lit proof sheet — paper at full luminance against the dark room */
+.pr-proof {
+  position: relative;
+  background: var(--color-strata-bone);
+  color: var(--color-strata-ink);
+  box-shadow: 0 0 80px rgba(246, 243, 236, 0.12), 0 34px 70px rgba(0, 0, 0, 0.5);
+}
+.pr-proof[data-brightest] {
+  box-shadow: 0 0 120px rgba(246, 243, 236, 0.2), 0 34px 70px rgba(0, 0, 0, 0.5);
+}
+.pr-proof::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: repeating-linear-gradient(0deg, rgba(11, 27, 58, 0.02) 0 1px, transparent 1px 7px);
+}
+
+/* the invoice strip: deposit → approval → balance */
+.pr-invoice {
+  position: relative;
+  border: 1px solid rgba(246, 243, 236, 0.25);
+  background: rgba(7, 16, 34, 0.6);
+}
+.pr-invoice::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: -8px;
+  border-top: 2px dashed rgba(246, 243, 236, 0.2);
+}

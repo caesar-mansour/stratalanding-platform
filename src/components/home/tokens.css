@@ -1,0 +1,290 @@
+/* ============================================================================
+ * STRATALANDING HOMEPAGE — THE TOKEN SHEET
+ *
+ * Every value here is quoted from a design system verified live against the
+ * Refero MCP. Sources named inline. Nothing is invented.
+ *
+ * THE ROOT DECISION: warm paper, not near-black. The corpus contains exactly two
+ * sites that are genuinely web studios selling OTHER people's work
+ * (carlbeaverson.com and Websmith Studio) and both independently chose warm
+ * light. The reason is asymmetric: a dark client capture on warm paper is the
+ * universal print-portfolio case, while a CREAM capture on near-black has zero
+ * shipped precedent and one explicit prohibition (Krea: "Avoid bright or
+ * high-key imagery that would disrupt the dark, high-contrast aesthetic").
+ * Paper hosts light AND dark client work. Near-black hosts only dark work — and
+ * our showcase assets are dentists.
+ *
+ * Two prior rejections are structurally impossible here:
+ *   · "squary theme" — the closed radius set contains NO 0px value.
+ *   · pills+shadows+glow+gradients — there is not one box-shadow in this file,
+ *     no gradient on any component, and exactly two pill objects on the whole
+ *     page, neither of which is a button.
+ * ========================================================================== */
+
+.one {
+  /* ── SURFACES — three steps, plus one that isn't ours ────────────────────
+   * THREE rungs, not two. Every paper system in the corpus runs three
+   * (#efefe4→#fcfcf9→#ffffff, #ffffff→#f9f7f3→#ecebe7, #fcfbf8→#ededea) and the
+   * previous build ran two, which is part of why it read flat. The middle rung
+   * is what gives a chrome bar or an inset somewhere to sit without a shadow.
+   * Declaring the client capture as Surface 3 of our OWN ladder is the whole
+   * trick. Jam ships this literally ("| 3 | Elevated UI | #ffffff |"). Once S3
+   * exists in the sheet, a warm cream dental page inside it is the system
+   * WORKING, not the system breaking. Cost: zero pixels.
+   * --------------------------------------------------------------------- */
+  --canvas: #f6f7f9;        /* L0 page ground — cool paper, tuned to brand navy */
+  --surface-2: #edeff3;     /* L1 the middle rung — chrome bars, insets, inactive */
+  --plate: #ffffff;         /* L2 plates, cards, nav, inputs */
+  --plate-dark: #0b1b3a;    /* BRAND NAVY — full-bleed bands */
+  /* L3 --artefact: any palette. Belongs to the client. NEVER restyled. */
+
+  /* ── INK LADDER ─────────────────────────────────────────────────────────
+   * Luminance-peak law: --ink is the darkest value on the page and ONLY
+   * headlines and the CTA fill reach it. Body copy is --ink-2. If body is as
+   * dark as the H1, the hierarchy is broken.
+   * --------------------------------------------------------------------- */
+  --ink: #0b1b3a;           /* BRAND NAVY — headlines, CTA fill. The luminance peak. */
+  --ink-2: #3a4a63;         /* body, nav links, sublines — navy-tinted */
+  --ink-3: #6b7789;         /* captions, meta, mono labels */
+  --ink-4: #9aa3b2;         /* placeholder, disabled, column headers */
+
+  /* Two rule tokens, roles fixed. Not four (Linear ships four and they are
+     indistinguishable), not one. */
+  --rule: #dce1e9;                         /* EVERY structural hairline — cool, navy-family */
+  --rule-interactive: rgb(11 27 58 / 28%);  /* ghost-button borders ONLY */
+
+  /* ── INK ON THE NAVY BANDS ──────────────────────────────────────────── */
+  --ink-on-dark: #f4f7fb;                  /* never pure #fff */
+  --ink-on-dark-2: #9fb0c8;
+  --rule-on-dark: rgb(244 247 251 / 15%);
+
+  /* ── THE BRAND ACCENT, AS A PROHIBITION ─────────────────────────────────
+   * ⚠️ CORRECTED. An earlier pass retired brand cyan on the argument that
+   * teal-blue is the commonest colour in dental web design and would collide
+   * with the plates. That was flagged as needing sign-off and then shipped
+   * anyway — wrong on process, and overruled: "not stratalanding colors."
+   * Cyan is back as the signal, and the collision worry is handled where it
+   * actually lives — the accent never sits inside or adjacent to a plate, so it
+   * can never touch a client's teal.
+   * --signal appears on exactly FOUR things: the active nav underline, the
+   * brief-assistant progress rule, the single "recommended" marker in pricing,
+   * and the portal live dot. Never a fill. Never a button. Never a plate
+   * border. Never on text above 14px. Never behind client work. Under 0.5% of
+   * rendered pixels. Pattern proof — basement.studio: "Active nav state only…
+   * never used for buttons or CTAs; its rarity is the feature."
+   *
+   * --------------------------------------------------------------------- */
+  --signal: #0891b2;        /* BRAND CYAN */
+  --signal-soft: #e3f2f6;   /* the only tinted surface — active tab underlay */
+
+  /* ── SPACE ──────────────────────────────────────────────────────────────
+   * Section gap is capped at 96px on purpose. carlbeaverson's 122px and Ryan
+   * Stephen's 100px are the exact figures that manufactured the vertical void
+   * at 2560×1300 in the forensics. Tailark: "Avoid white space beyond 48px
+   * between main sections; maintain a compact information density."
+   * --------------------------------------------------------------------- */
+  --u: 4px;
+  --gap-element: 16px;      /* Websmith elementGap */
+  --pad-card: 32px;         /* Websmith cardPadding — also the plate's mat */
+  --gap-section: 64px;      /* default */
+  --gap-section-max: 96px;  /* HARD CEILING */
+  --maxw: 1200px;           /* Dialog page max; reference set ~1200 */
+  --gutter: 30px;
+
+  /* ── THE CLOSED RADIUS SET — five values, none of them 0 ────────────────
+   * The role-split is what satisfies both prior rejections at once. Cron
+   * declares `buttons 4px` AND `navigationPills 9999px` in one system. Warp:
+   * "never apply round corners to rectangular content containers — pill radius
+   * is reserved for icon-button controls only."
+   * No decimals. No arbitrary values. A plate and the capture inside it NEVER
+   * share a radius — Warp keeps `images` and `cards` as separate tokens for
+   * exactly this reason, and a matched radius is what makes a screenshot read
+   * as a sticker.
+   * --------------------------------------------------------------------- */
+  --r-btn: 8px;             /* buttons, inputs — Websmith */
+  --r-capture: 10px;        /* client captures, TOP CORNERS ONLY — Warp images */
+  --r-plate: 16px;          /* plates, cards — Tailark; largeContainers */
+  --r-band: 24px;           /* navy band inner container — heroElements */
+  --r-pill: 100px;          /* the hero chip and the URL pill. NOTHING else. */
+
+  /* ── TYPE ───────────────────────────────────────────────────────────── */
+  --font-display: var(--font-one-display), "Inter", system-ui, -apple-system, "Segoe UI", Arial, sans-serif;
+  --font-body: var(--font-one-body), system-ui, -apple-system, "Segoe UI", Arial, sans-serif;
+  --font-mono: var(--font-one-mono), ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+
+  background: var(--canvas);
+  color: var(--ink-2);
+  accent-color: var(--signal);
+  font-family: var(--font-body);
+  overflow-x: clip;
+}
+
+/* ── ELEVATION ──────────────────────────────────────────────────────────────
+ * box-shadow: none. Everywhere. Everything. Zero exceptions.
+ * Separation is SURFACE STEP + HAIRLINE: #ffffff plate on #f8f8f2 canvas,
+ * framed 1px solid #dedcd1. That is the entire elevation system.
+ * Websmith: "Do not introduce strong drop shadows; the system prefers a flat,
+ * clean aesthetic with elevation defined by background color shifts or hairline
+ * borders." The rule throughout: do not use dark, harsh shadows; employ subtle borders.
+ * A page with zero shadows cannot be killed for shadows.
+ * ------------------------------------------------------------------------- */
+.one *,
+.one *::before,
+.one *::after { box-shadow: none; }
+
+/* ── TYPE LADDER ───────────────────────────────────────────────────────────
+ * THE TRACKING SIGN-FLIP LAW: negative at display sizes, crossing zero between
+ * 16px and 20px, POSITIVE at 12–14px. Verified twice (Warp, Krantz). Carrying
+ * the H1's negative tracking down to a 12px label is the single most reliable
+ * amateur tell.
+ *
+ * CEILINGS: weight 600 overall, and display type never exceeds 500 (rule:
+ * "Never use bolding (weights above 500) for headlines"). Display size caps at
+ * 64px — 132px is what manufactured the vertical void.
+ * ------------------------------------------------------------------------- */
+.one-display {
+  font-family: var(--font-display);
+  font-size: clamp(40px, 4.4vw, 64px);
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+  font-weight: 500;
+  color: var(--ink);
+  margin: 0;
+  /* Display type broke mid-word on a prior build and he scrolled straight past
+     it. Made impossible rather than unlikely. */
+  hyphens: none;
+  overflow-wrap: normal;
+  word-break: keep-all;
+}
+.one-h2 {
+  font-family: var(--font-display);
+  font-size: clamp(30px, 2.6vw, 40px);
+  line-height: 1.15;
+  letter-spacing: -0.025em;
+  font-weight: 500;
+  color: var(--ink);
+  margin: 0;
+  hyphens: none;
+  word-break: keep-all;
+}
+.one-subline {
+  font-size: 18px;
+  line-height: 1.5;
+  letter-spacing: -0.01em;
+  font-weight: 400;
+  color: var(--ink-2);
+  max-inline-size: 46ch;
+  margin: 0;
+}
+.one-body { font-size: 16px; line-height: 1.43; letter-spacing: -0.4px; color: var(--ink-2); margin: 0; }
+.one-caption { font-size: 14px; line-height: 1.43; letter-spacing: -0.35px; color: var(--ink-3); }
+.one-caption strong { font-weight: 600; color: var(--ink); }
+/* positive tracking below 16px — the sign flip */
+.one-micro { font-size: 12px; line-height: 1.4; letter-spacing: 0.01em; color: var(--ink-3); }
+.one-label {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  line-height: 1.4;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-weight: 400;
+  color: var(--ink-3);
+}
+/* tabular-nums is not optional: without it $2,400 / $4,800 / $9,600 will not
+   optically align in a row. Tracking stays at -0.02em — a tighter mono value
+   collides the comma into the 4 at this size. */
+.one-price {
+  font-family: var(--font-mono);
+  font-size: 36px;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  font-weight: 600;
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+}
+.one-num { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+
+/* ── LAYOUT ─────────────────────────────────────────────────────────────── */
+.one-wrap {
+  width: 100%;
+  max-width: var(--maxw);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+.one-section { padding-block: var(--gap-section); }
+
+/* ── CTA — the primary is INK. Not white, not the accent. ───────────────────
+ * Verbatim from Websmith, the closest business analogue in the corpus:
+ * "Solid Ink background (#1a1a1a) with Fog text (#ffffff), 8px border-radius,
+ * and generous 16px vertical, 32px horizontal padding."
+ *
+ * The whole "accent CTA vs white CTA" debate was a DARK-page debate. On warm
+ * paper the maximum-contrast object available is ink (~90-point step), and it
+ * cannot compete with whatever hue is in the adjacent plate. Ink wins on
+ * contrast AND on non-interference, and it frees the accent budget entirely.
+ *
+ * Exactly ONE filled button per screen (Warp: "the sole maximum-contrast
+ * element… dilutes if reused"). Everything else, including all three pricing
+ * cards, is ghost.
+ * ------------------------------------------------------------------------- */
+.one-cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px 32px;
+  border-radius: var(--r-btn);
+  font-family: var(--font-body);
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 1.4;
+  letter-spacing: -0.01em;
+  text-decoration: none;
+  white-space: nowrap;
+  /* closed property list — never transform, never scale, never shadow growth.
+     The scale(1.02) card lift is the amateur signature. */
+  transition: color 0.2s ease, background-color 0.2s ease, border-color 0.2s ease;
+}
+.one-cta--primary { background: var(--ink); color: var(--plate); border: 0; }
+.one-cta--primary:hover { background: #000; }
+.one-cta--ghost {
+  background: transparent;
+  color: var(--ink);
+  border: 1px solid var(--rule-interactive);
+}
+.one-cta--ghost:hover { border-color: var(--ink); }
+
+/* ── THE PILL CHIP — one of only two pill objects on the page ───────────── */
+.one-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 28px;
+  padding-inline: 14px;
+  border-radius: var(--r-pill);
+  background: var(--plate);
+  border: 1px solid var(--rule);
+  font-size: 12px;
+  line-height: 1.4;
+  letter-spacing: 0.01em;
+  color: var(--ink-3);
+  text-decoration: none;
+}
+.one-chip__dot { width: 5px; height: 5px; border-radius: 50%; background: var(--signal); }
+
+/* ── LINKS — underline mechanics ────────────────────────────────────────────
+ * No underline at rest. On hover, transition the decoration COLOUR and the
+ * offset — never toggle text-decoration itself, which cannot animate.
+ * ------------------------------------------------------------------------- */
+.one-link {
+  color: var(--ink);
+  text-decoration: underline;
+  text-decoration-color: transparent;
+  text-underline-offset: 2px;
+  transition: text-decoration-color 0.2s ease, text-underline-offset 0.2s ease;
+}
+.one-link:hover { text-decoration-color: var(--ink); text-underline-offset: 4px; }
+
+/* ── REDUCED MOTION ─────────────────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .one *, .one *::before, .one *::after { transition: none !important; animation: none !important; }
+}

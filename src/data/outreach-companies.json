@@ -1,0 +1,32 @@
+[
+  {
+    "slug": "northlight-dental",
+    "name": "Northlight Dental",
+    "city": "Springfield",
+    "umbrellaUrl": "https://previews.example.com/northlight-dental"
+  },
+  {
+    "slug": "example-family-dentistry",
+    "name": "Example Family Dentistry",
+    "city": "Riverton",
+    "umbrellaUrl": "https://previews.example.com/example-family-dentistry"
+  },
+  {
+    "slug": "sample-orthodontics",
+    "name": "Sample Orthodontics",
+    "city": "Fairview",
+    "umbrellaUrl": "https://previews.example.com/sample-orthodontics"
+  },
+  {
+    "slug": "demo-smile-clinic",
+    "name": "Demo Smile Clinic",
+    "city": "Lakeside",
+    "umbrellaUrl": "https://previews.example.com/demo-smile-clinic"
+  },
+  {
+    "slug": "placeholder-dental-group",
+    "name": "Placeholder Dental Group",
+    "city": "Westbrook",
+    "umbrellaUrl": "https://previews.example.com/placeholder-dental-group"
+  }
+]

@@ -1,0 +1,149 @@
+/* ============================================================================
+ * THE MOTION LAYER.
+ *
+ * Transform + opacity only, so every animation composites on the GPU and cannot
+ * trigger layout. One easing for arrivals, one shorter one for feedback.
+ *
+ * The previous build's rule — "Forbidden on hover anywhere: transform, scale,
+ * translate" — came from a reference warning about the `scale(1.02)` card lift.
+ * That warning is about ONE cheap gesture. Applied to everything it left a page
+ * where only link colour moved, which is why it read dead.
+ *
+ * The distinction that matters: a card that inflates on hover is amateur. A
+ * surface that shifts 2px, an arrow that advances 3px, an image that scales 1.5%
+ * inside a fixed frame — those are feedback, and every premium reference has them.
+ * ========================================================================== */
+
+.one { --e-out: cubic-bezier(.22, 1, .36, 1); --e-io: cubic-bezier(.4, 0, .2, 1); }
+
+/* ── REVEAL — content arrives rather than being already there ───────────── */
+.one-rv {
+  opacity: 0;
+  transform: translate3d(0, 14px, 0);
+  transition: opacity 620ms var(--e-out), transform 620ms var(--e-out);
+  will-change: opacity, transform;
+}
+.one-rv[data-shown="true"] { opacity: 1; transform: none; will-change: auto; }
+
+/* When staggering, the WRAPPER stays put and each child arrives in turn — so a
+   row of cells resolves left to right instead of the whole block appearing. */
+.one-rv--stagger { opacity: 1; transform: none; will-change: auto; }
+.one-rv--stagger > * {
+  opacity: 0;
+  transform: translate3d(0, 14px, 0);
+  transition: opacity 620ms var(--e-out), transform 620ms var(--e-out);
+}
+.one-rv--stagger[data-shown="true"] > * { opacity: 1; transform: none; }
+
+/* ── HERO INTRO — the headline resolves line by line on load ──────────────
+ * Lines are already separate spans in the markup (the declared-lines rule that
+ * prevents mid-word breaks), so nothing is split at runtime: no font-load race,
+ * no CLS, and the SSR text is still the LCP element.
+ * ---------------------------------------------------------------------- */
+.one-intro .one-eyebrow,
+.one-intro .one-display > span,
+.one-intro .one-s1__ctas,
+.one-intro .one-s1__proof {
+  opacity: 0;
+  transform: translate3d(0, 18px, 0);
+  transition: opacity 720ms var(--e-out), transform 720ms var(--e-out);
+}
+.one-intro[data-shown="true"] .one-eyebrow,
+.one-intro[data-shown="true"] .one-display > span,
+.one-intro[data-shown="true"] .one-s1__ctas,
+.one-intro[data-shown="true"] .one-s1__proof { opacity: 1; transform: none; }
+
+/* the cascade — eyebrow, then each headline line, then the actions */
+.one-intro[data-shown="true"] .one-eyebrow { transition-delay: 40ms; }
+.one-intro[data-shown="true"] .one-display > span:nth-child(1) { transition-delay: 120ms; }
+.one-intro[data-shown="true"] .one-display > span:nth-child(2) { transition-delay: 200ms; }
+.one-intro[data-shown="true"] .one-display > span:nth-child(3) { transition-delay: 280ms; }
+.one-intro[data-shown="true"] .one-s1__ctas { transition-delay: 360ms; }
+.one-intro[data-shown="true"] .one-s1__proof { transition-delay: 440ms; }
+
+/* The underline draws itself in rather than arriving finished — the one flourish
+   on the page, and it lands on the word the headline is actually about. */
+.one-display__mark {
+  background-image: linear-gradient(var(--ink), var(--ink));
+  background-repeat: no-repeat;
+  background-position: 0 100%;
+  background-size: 0% 3px;
+  text-decoration: none;
+  padding-bottom: 8px;
+  transition: background-size 760ms var(--e-out) 520ms;
+}
+.one-intro[data-shown="true"] .one-display__mark { background-size: 100% 3px; }
+
+/* ── FEEDBACK — real motion, on the right things ─────────────────────────── */
+
+/* CTAs: a 1px press and a colour move. Never a scale. */
+.one-cta { transition: background-color .2s var(--e-io), color .2s var(--e-io), border-color .2s var(--e-io), transform .12s var(--e-io); }
+.one-cta:active { transform: translate3d(0, 1px, 0); }
+
+/* Seam cells: the surface fills and the index steps forward. The CELL does not
+   move — the content inside it does, which is the difference between feedback and
+   a bouncing card. */
+.one-seam__cell { transition: background-color .24s var(--e-io); }
+.one-seam__no { transition: transform .24s var(--e-out), color .24s var(--e-io); }
+.one-seam__cell:hover .one-seam__no { transform: translate3d(3px, 0, 0); color: var(--signal); }
+.one-seam__t { transition: transform .24s var(--e-out); }
+.one-seam__cell:hover .one-seam__t { transform: translate3d(3px, 0, 0); }
+
+/* Ledger + table rows: the rule darkens and the row's first cell steps in. */
+.one-ledger__row, .one-table__row { transition: border-color .2s var(--e-io), background-color .2s var(--e-io); }
+.one-ledger__c1, .one-table__t { transition: transform .24s var(--e-out); }
+.one-ledger__row:hover .one-ledger__c1,
+.one-table__row:hover .one-table__t { transform: translate3d(3px, 0, 0); }
+
+/* Work tabs: the underline grows from the left instead of switching on. */
+.one-tab { position: relative; border-bottom-color: transparent !important; }
+.one-tab::after {
+  content: "";
+  position: absolute;
+  left: 0; right: 0; bottom: -1px;
+  height: 2px;
+  background: var(--signal);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform .28s var(--e-out);
+}
+.one-tab.is-on::after, .one-tab:hover::after { transform: scaleX(1); }
+
+/* Pricing tiers: the border lifts and the surface warms. No scale, no shadow. */
+.one-tier { transition: border-color .24s var(--e-io), background-color .24s var(--e-io); }
+
+/* ── THE PLATE ──────────────────────────────────────────────────────────
+ * The capture travels through its own content on scroll (PlateScrub). A very
+ * slight scale on hover INSIDE the fixed frame reads as the page being live,
+ * while the frame itself never moves — so nothing reflows.
+ * ---------------------------------------------------------------------- */
+.one-scrub { position: relative; }
+.one-plate__shot { transition: transform .6s var(--e-out); }
+.one-plate__window { transition: border-color .24s var(--e-io); }
+
+/* the chrome dots light up as the page scrolls — a tiny sign of life */
+.one-plate__dots i { transition: background-color .3s var(--e-io); }
+.one-plate:hover .one-plate__dots i:nth-child(1) { background: #ff5f57; }
+.one-plate:hover .one-plate__dots i:nth-child(2) { background: #febc2e; }
+.one-plate:hover .one-plate__dots i:nth-child(3) { background: #28c840; }
+
+/* the live dot in the nav breathes — opacity only, so it costs nothing */
+@keyframes one-pulse { 0%, 100% { opacity: 1; } 50% { opacity: .35; } }
+.one-nav__dot { animation: one-pulse 2.4s var(--e-io) infinite; }
+
+/* ── STILL BY DEFAULT ───────────────────────────────────────────────────
+ * The page is designed to be excellent completely static; motion is the reward
+ * for scrolling. Under reduced motion everything is simply already arrived.
+ * ---------------------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  .one-rv, .one-rv--stagger > *,
+  .one-intro .one-eyebrow, .one-intro .one-display > span,
+  .one-intro .one-s1__ctas, .one-intro .one-s1__proof {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+  .one-display__mark { background-size: 100% 3px !important; transition: none !important; }
+  .one-nav__dot { animation: none !important; }
+  .one * { transition-duration: .01ms !important; }
+}

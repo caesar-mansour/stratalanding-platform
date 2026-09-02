@@ -1,0 +1,49 @@
+name: Security
+
+# Audit dependencies for known CVEs and scan for committed secrets on every push/PR,
+# plus a weekly scheduled run to catch newly-disclosed advisories (audit F27).
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  schedule:
+    - cron: '0 6 * * 1' # Mondays 06:00 UTC
+
+permissions:
+  contents: read
+
+jobs:
+  selftest:
+    name: Security self-test (defenses can't silently regress)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      # Runs the REAL WAF + redirect + sanitizer modules through attack AND legit inputs.
+      # Fails the build if an attack stops being caught OR a legit request starts being blocked.
+      - run: node --experimental-strip-types --no-warnings scripts/security/selftest.mjs
+
+  npm-audit:
+    name: npm audit (fail on high/critical)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      # Production dependencies only; fail the build on high or critical advisories.
+      - run: npm audit --omit=dev --audit-level=high
+
+  secret-scan:
+    name: Secret scan (gitleaks)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

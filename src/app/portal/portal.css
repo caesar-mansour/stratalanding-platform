@@ -1,0 +1,13 @@
+/* Tailwind utilities for the Portal routes ONLY.
+   The global sheet (src/app/globals.css) excludes ./portal via `@source not`, so
+   this sheet carries every utility those pages use, and it loads only on
+   /portal/* (imported by src/app/portal/layout.tsx).
+
+   WHY: these are logged-in surfaces no anonymous visitor ever reaches, and their
+   utilities were sitting in the stylesheet that render-blocks the marketing
+   homepage. Portal alone accounted for ~16.6KB raw of it. Same pattern, same
+   reasoning and the same one-line shape as src/app/demos/demos.css.
+
+   Custom @theme tokens (bg-surface, text-text-muted, …) still come from the
+   global sheet, which loads here too. */
+@import "tailwindcss" source("./");

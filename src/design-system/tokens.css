@@ -1,0 +1,241 @@
+/**
+ * THE OBSERVATORY — design tokens. THE single witness (Doctrine, Law 4).
+ *
+ * Every color, glow, easing, and duration in the Observatory world traces to
+ * a variable in this file or it is a defect. Meaning of the palette:
+ *   sky        — the field (page ground; the site is observed at night)
+ *   nebula     — brand navy mass (plates, artifacts, monuments)
+ *   emission   — cyan as EMITTED LIGHT: lines, strokes, small text, glow.
+ *                NEVER a solid fill. No cyan rectangles. This is the law
+ *                that makes a 400px crop attributable to us.
+ *   starlight  — bone text; brightness = hierarchy
+ *   paper      — the observing log (documents: /brief, placards, proposals)
+ * Light law: point sources only. Surfaces do not carry directional daylight;
+ * they are lit by glows that MEAN something (live, selected, recommended).
+ */
+
+.observatory {
+  /* ── field ─────────────────────────────────────────────── */
+  --os-sky: #050b18;
+  --os-deepfield: #030711;      /* floor bands — deepest field */
+  --os-nebula: #0b1b3a;         /* brand navy — mass, artifacts */
+  --os-plate: #071020;          /* instrument panel ground */
+  --os-glass: rgba(10, 21, 38, 0.72);
+
+  /* ── emitted light ─────────────────────────────────────── */
+  --os-emission: #22d3ee;       /* lines, strokes, glow — never fills */
+  --os-emission-low: #0891b2;   /* dimmed emission (pressed, secondary) */
+  --os-emission-08: rgba(34, 211, 238, 0.08);
+  --os-emission-18: rgba(34, 211, 238, 0.18);
+  --os-emission-40: rgba(34, 211, 238, 0.4);
+
+  /* ── starlight (text) ──────────────────────────────────── */
+  --os-starlight: #eaf2f7;
+  --os-starlight-body: rgba(234, 242, 247, 0.75);
+  --os-starlight-mute: rgba(234, 242, 247, 0.45);
+  --os-starlight-faint: rgba(234, 242, 247, 0.28);
+
+  /* ── chart furniture ───────────────────────────────────── */
+  --os-graticule: rgba(234, 242, 247, 0.05);
+  --os-hairline: rgba(234, 242, 247, 0.22);
+  --os-hairline-dim: rgba(234, 242, 247, 0.11);
+
+  /* ── the observing log (paper surfaces) ────────────────── */
+  --os-paper: #f2efe7;
+  --os-paper-2: #eae6da;
+  --os-paper-ink: #0b1b3a;
+  --os-paper-ink-body: rgba(11, 27, 58, 0.72);
+  --os-paper-ink-mute: rgba(11, 27, 58, 0.45);
+  --os-paper-hairline: rgba(11, 27, 58, 0.18);
+
+  /* ── type ──────────────────────────────────────────────── */
+  --os-font-display: var(--font-os-display, 'Instrument Serif', serif);
+  --os-font-body: var(--font-os-body, 'Newsreader', serif);
+  --os-font-ui: var(--font-os-ui, 'Switzer', sans-serif);
+  --os-font-mono: var(--font-os-mono, 'Space Mono', monospace);
+
+  /* violent scale jumps (Law 2): display / chapter / body / mono */
+  --os-text-display: clamp(2.9rem, 7.4vw, 7.75rem);
+  --os-text-chapter: clamp(2.05rem, 3.6vw, 3.9rem);
+  --os-text-plate: clamp(1.35rem, 2vw, 1.9rem);
+  --os-text-body: 1.0625rem;
+  --os-text-mono: 0.6875rem;    /* 11px */
+  --os-text-mono-sm: 0.5625rem; /* 9px  */
+
+  /* ── shape law: rectangles and circles only ────────────── */
+  --os-r-0: 0px;
+  --os-r-full: 9999px;          /* the aperture / point sources */
+
+  /* ── elevation = light, not shadow ─────────────────────── */
+  --os-glow-em: 0 0 24px rgba(34, 211, 238, 0.25);
+  --os-glow-em-strong: 0 0 46px rgba(34, 211, 238, 0.45);
+  --os-glow-star: 0 0 30px rgba(234, 242, 247, 0.5);
+  --os-shadow-mass: 0 30px 60px rgba(0, 0, 0, 0.5);
+
+  /* ── motion: two authored easings, total (Law 3) ───────── */
+  --os-ease-capture: cubic-bezier(0.16, 0, 0.08, 1);   /* enter — orbital capture */
+  --os-ease-slingshot: cubic-bezier(0.62, 0, 0.22, 1); /* exit — gravitational release */
+  --os-dur-fast: 180ms;
+  --os-dur-move: 420ms;
+  --os-dur-drift: 1200ms;
+}
+
+/* ═══ base utility grammar (consumed by primitives + bands) ═══ */
+
+.os-mono {
+  font-family: var(--os-font-mono);
+  font-size: var(--os-text-mono);
+  letter-spacing: 0.16em;
+}
+.os-mono-sm {
+  font-family: var(--os-font-mono);
+  font-size: var(--os-text-mono-sm);
+  letter-spacing: 0.14em;
+}
+.os-display {
+  font-family: var(--os-font-display);
+  font-size: var(--os-text-display);
+  font-weight: 400;
+  line-height: 1.0;
+  letter-spacing: 0.002em;
+  color: var(--os-starlight);
+}
+.os-display em,
+.os-chapter em {
+  font-style: italic;
+  color: var(--os-emission);
+  text-shadow: 0 0 34px rgba(34, 211, 238, 0.45);
+}
+.os-chapter {
+  font-family: var(--os-font-display);
+  font-size: var(--os-text-chapter);
+  font-weight: 400;
+  line-height: 1.04;
+  color: var(--os-starlight);
+}
+.os-body {
+  font-family: var(--os-font-body);
+  font-size: var(--os-text-body);
+  line-height: 1.58;
+  color: var(--os-starlight-body);
+}
+
+/* the graticule — chart-paper sky behind every band */
+.os-graticule {
+  background-image:
+    repeating-linear-gradient(0deg, var(--os-graticule) 0 1px, transparent 1px 112px),
+    repeating-linear-gradient(90deg, var(--os-graticule) 0 1px, transparent 1px 160px);
+}
+
+/* field grounds */
+.os-field { background-color: var(--os-sky); }
+.os-field-deep { background-color: var(--os-deepfield); }
+.os-log { background-color: var(--os-paper); color: var(--os-paper-ink); }
+
+/* ── CTA set: six microstates, two variants ────────────────
+   PRIMARY = emission-bordered light (never a cyan fill).
+   SECONDARY = hairline. */
+.os-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 52px;
+  padding: 0 28px;
+  font-family: var(--os-font-mono);
+  font-size: var(--os-text-mono);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  border-radius: var(--os-r-0);
+  cursor: pointer;
+  transition:
+    box-shadow var(--os-dur-fast) var(--os-ease-capture),
+    border-color var(--os-dur-fast) var(--os-ease-capture),
+    color var(--os-dur-fast) var(--os-ease-capture),
+    transform var(--os-dur-fast) var(--os-ease-capture);
+}
+.os-btn-em {
+  border: 1px solid var(--os-emission);
+  color: var(--os-emission);
+  background: transparent;
+  box-shadow: var(--os-glow-em), inset 0 0 14px var(--os-emission-08);
+}
+.os-btn-em:hover {
+  box-shadow: var(--os-glow-em-strong), inset 0 0 22px var(--os-emission-18);
+  color: var(--os-starlight);
+}
+.os-btn-em:active { transform: translateY(1px); box-shadow: var(--os-glow-em); }
+.os-btn-em:focus-visible {
+  outline: 1px solid var(--os-starlight);
+  outline-offset: 3px;
+}
+.os-btn-em[disabled], .os-btn-em[aria-disabled='true'] {
+  border-color: var(--os-starlight-faint);
+  color: var(--os-starlight-faint);
+  box-shadow: none;
+  pointer-events: none;
+}
+.os-btn-em[data-loading] { color: transparent; position: relative; }
+.os-btn-em[data-loading]::after {
+  content: '';
+  position: absolute;
+  width: 14px; height: 14px;
+  border-radius: var(--os-r-full);
+  border: 1.5px solid var(--os-emission);
+  border-top-color: transparent;
+  animation: os-orbit 0.8s linear infinite;
+}
+.os-btn-hair {
+  border: 1px solid var(--os-hairline);
+  color: var(--os-starlight-body);
+  background: transparent;
+}
+.os-btn-hair:hover { border-color: var(--os-starlight); color: var(--os-starlight); }
+.os-btn-hair:active { transform: translateY(1px); }
+.os-btn-hair:focus-visible { outline: 1px solid var(--os-emission); outline-offset: 3px; }
+/* on paper (the observing log) the same pair inverts to ink */
+.os-log .os-btn-em {
+  border-color: var(--os-paper-ink);
+  color: var(--os-paper-ink);
+  box-shadow: none;
+}
+.os-log .os-btn-hair { border-color: var(--os-paper-hairline); color: var(--os-paper-ink-body); }
+
+@keyframes os-orbit { to { transform: rotate(360deg); } }
+
+/* ── instrument panel ──────────────────────────────────── */
+.os-plate {
+  background: var(--os-plate);
+  border: 1px solid var(--os-hairline-dim);
+}
+
+/* ── the meridian — emission seam between bands ────────── */
+.os-meridian {
+  height: 2px;
+  width: 100%;
+  background: linear-gradient(90deg,
+    rgba(34, 211, 238, 0) 0%,
+    rgba(34, 211, 238, 0.65) 18%,
+    rgba(8, 145, 178, 0.35) 52%,
+    rgba(34, 211, 238, 0.6) 82%,
+    rgba(34, 211, 238, 0) 100%);
+  box-shadow: 0 4px 22px rgba(34, 211, 238, 0.25);
+}
+
+/* ── stars: only three sizes exist ─────────────────────── */
+.os-star, .os-star-faint, .os-star-bright {
+  position: absolute;
+  border-radius: var(--os-r-full);
+  background: var(--os-starlight);
+}
+.os-star { width: 2px; height: 2px; opacity: 0.8; }
+.os-star-faint { width: 1.5px; height: 1.5px; opacity: 0.35; }
+.os-star-bright { width: 3px; height: 3px; box-shadow: var(--os-glow-star); }
+
+/* reduced motion: the still must stand (Law 8) */
+@media (prefers-reduced-motion: reduce) {
+  .observatory *, .observatory *::before, .observatory *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

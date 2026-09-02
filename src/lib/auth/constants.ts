@@ -1,0 +1,9 @@
+export const AUTH_COOKIE_NAME = 'session_token';
+export const SESSION_DURATION_DAYS = 7;
+export const SESSION_DURATION_MS = SESSION_DURATION_DAYS * 24 * 60 * 60 * 1000;
+export const MAGIC_LINK_EXPIRY_MINUTES = 15;
+export const PASSWORD_RESET_EXPIRY_MINUTES = 60;
+export const EMAIL_VERIFICATION_EXPIRY_HOURS = 24;
+export const JWT_ALGORITHM = 'HS256';
+export const BCRYPT_ROUNDS = 12;
+export const MAGIC_LINK_RATE_LIMIT_SECONDS = 60;

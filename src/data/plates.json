@@ -1,0 +1,30 @@
+{
+  "plates": [
+    {
+      "id": "northlight",
+      "label": "Northlight Dental",
+      "industry": "dental",
+      "note": "Fictional showcase practice, de-branded.",
+      "src": "/plates/northlight-d.webp",
+      "mobileSrc": "/plates/northlight-m.webp",
+      "w": 1440,
+      "h": 12749,
+      "mobileW": 390,
+      "mobileH": 10391,
+      "meanL": 0.093,
+      "p50L": 0.039,
+      "p95L": 0.467,
+      "p99L": 0.845,
+      "maxL": 0.945,
+      "brightFrac": 0.024,
+      "domHex": "#080808",
+      "blurUp": "data:image/webp;base64,UklGRjYCAABXRUJQVlA4ICoCAAAwDACdASoYANQAPu12r1Mpp6QiolgMSTAdiWcA055tfWUt5IHWZeU9iwSVU6PLlqIu44C/TZc9PfmmhfVYMuHTfzG7B4vn0BG1lGaquS3TAsprCla7O6tSMhUiMOYUZuzyj4QjlJP1O++AAP7zJUfLjxvDhyFZWse9woJNyTuAov6hDiHu0Y7AI0uSxKPJ9e+356bDRI81Sov+nvlc636+93KGdYdOaaMXNG0C5n0f9v03qJtY7TIDqvMBnk5r4VzJzWk2tY0JK2juLLBxO15TiAUGVXl1SgbHOAze/CMRdVclWUji9YeklBdXSwyly7Ra9o0JKELTsqBuLXiDGfBqjMC4JzHHTRqazPzKwvWAkmL+hSVRzQVcNtp0+uvHnAu67VNp0/Mjjf7+NdJmD2ujHOYbb/2UfNwjXnHsvl1g1lOA1+GPBMq8/87s3KojOGYVlxt7ICPyj47oHv0eXXZUO3a3b7BIogZsYhqYB1aCLTiL/kpfuvtWEGIk7MZ67Okhf3huiuYgw4hkHZcQbUTECZcWXnSJuUlp+r9adynlAP1s+rpYMQmRqYjbttzHEU7g0ptHswqLDHGg/N81WbMawIvqQizMnIxo8LHeZa9J7qcJj3oOSuUFQ+eQOmu8UYbMMY92NAaVF3GenExR425dPD8qrhJkVgOtAqggYUzIDHuOqAdExdpD13NANNEOFHekYQQe/HYIAAKGbHC952h3igZunXTdIcgAAA==",
+      "blurUpBytes": 574,
+      "layoutHash": "6d1f8c4255b2",
+      "layoutSig": "DIV:11:1:2|DIV:127:13:37|SECTION:11:2:1|SECTION:8:1:0|SECTION:6:1:4|SECTION:53:1:12|SECTION:6:1:0|SECTION:10:1:2|SECTION:9:1:5|SECTION:8:1:0|SECTION:9:1:11|DIV:11:0:0|DIV:11:0:0",
+      "dKb": 255,
+      "mKb": 174,
+      "domain": "northlightdental.ca"
+    }
+  ]
+}

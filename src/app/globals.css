@@ -1,0 +1,905 @@
+@import "tailwindcss";
+/* PERF: keep the 793 demo routes' utilities OUT of the global sheet — they were
+   inflating it to ~1.3MB raw (~122KB gz) and blocking first paint on every page.
+   Demo routes load their own sheet (src/app/demos/demos.css via demos/layout.tsx). */
+@source not "./demos";
+/* PERF 2026-08-13: the same argument, for the logged-in surfaces. Measured on a
+   production build, the homepage's render-blocking stylesheet was 321KB raw /
+   42.6KB gz and contained ZERO [data-nl] rules — it is app-wide Tailwind, and
+   the homepage uses roughly 7% of it. Admin alone was ~35.9KB raw of the sheet
+   that blocks first paint on the marketing site. None of these directories ever
+   render on a public page, so carving them out cannot regress one.
+   Each loads its own sheet from its own layout.tsx, exactly like ./demos.
+   ./preview is deliberately NOT carved out — it has no layout.tsx, and adding
+   one to save ~7KB is a change to how that route renders for very little. */
+@source not "./admin";
+@source not "./portal";
+@source not "./partner-portal";
+@source not "./proposal";
+
+/* ── THE STRATA CUT — color tokens (homepage world) ─────────────────────────
+   Utilities (bg-strata-bone, text-strata-ink, …) generate from here; the
+   craft layer (type scale, cut grammar, buttons) lives route-scoped in
+   src/components/strata/tokens.css. Laws: oxide = earth/craft · phosphor =
+   alive/measured (live-only) · navy/cyan retired from the homepage. */
+/* ABYSS EDITION (2026-07-18, Caesar's call): brand navy/cyan IS the world.
+   The descent is a night-ocean dive — surface daylight → THE SUBMERSION →
+   abyss. Cyan is not an accent, it is LIGHT: rays in the shallows,
+   bioluminescence in the deep. Token names keep their strata roles so the
+   band markup survives the re-theme. */
+/* THE OBSERVATORY (2026-07-23, tournament winner — Caesar's pick; constitution
+   in src/design-system/SYSTEM.md): the site is observed at night. The field is
+   sky, navy is nebula mass, cyan is EMITTED LIGHT (lines/strokes/glow — never
+   a fill), text is starlight. Token names keep their strata ROLES so the band
+   markup survives the re-theme: "ink" = primary text on column surfaces
+   (now starlight on the night field); "bone" = the shallow column ground
+   (now the upper sky). Value inversion, semantics preserved. */
+/* THE PRESSRUN (2026-07-23 night, v6 — Caesar's Plate Room pivot; spec = the
+   PRESS BOOK §H in the plan file): the site is a letterpress floor. Paper is
+   the ground, brand navy IS the ink, cyan is the C PLATE (process ink: marks,
+   plates, wet states — never decoration). Acts: paper shop floor (I, III)
+   with ONE dark passage — THE INK ROOM (II) — where proofs glow under lamps.
+   Token ROLES land naturally again: "ink" = navy text on paper; "bone" =
+   paper-light text in the ink room; paper2/3 = sheet grounds; deep* = the
+   ink room's navy family. */
+@theme {
+  /* papers (Act I/III grounds + sheets) */
+  --color-strata-bone: #f6f3ec;        /* proof paper — also text in the ink room */
+  --color-strata-paper2: #f3efe4;      /* press-bed paper / sheet ground */
+  --color-strata-paper3: #ede7d8;      /* aged sheet */
+  /* THE INK ROOM (Act II) — navy column */
+  --color-strata-deep1: #0b1b3a;       /* ink plate (brand primary) */
+  --color-strata-deep2: #0a1730;       /* the room */
+  --color-strata-deep3: #081226;
+  --color-strata-bedrock: #071022;     /* the room floor */
+  /* inks */
+  --color-strata-ink: #0b1b3a;         /* THE ink — text on paper */
+  --color-strata-ink-body: rgba(11, 27, 58, 0.82);
+  --color-strata-ink-mute: rgba(11, 27, 58, 0.58);
+  --color-strata-bone-body: rgba(246, 243, 236, 0.82);
+  --color-strata-bone-mute: rgba(246, 243, 236, 0.6);
+  /* THE SEAM = the C plate (registration lines, marks, CTA press) */
+  --color-strata-seam: #0891b2;
+  --color-strata-seam-deep: #0e7490;
+  /* THE LIVE = wet ink — glow states, lamps, live instruments ONLY */
+  --color-strata-live: #22d3ee;
+  --color-strata-hairline: rgba(11, 27, 58, 0.16);
+  --color-strata-hairline-deep: rgba(246, 243, 236, 0.18);
+}
+
+/* ── THE STRATA CUT — global chrome (Navbar/Footer render on every marketing
+   route, so their styles live here, not in the route-scoped tokens.css).
+   Buttons carry all six microstates. Deep state = below the water table.
+   @layer components: utilities (hidden, md:*) must keep winning the cascade. */
+@layer components {
+.st-btn {
+  font-family: var(--font-body), Arial, sans-serif;
+  font-weight: 500;
+  font-size: 0.9375rem;
+  letter-spacing: 0.01em;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  height: 3rem;
+  padding: 0 1.5rem;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition:
+    background-color 160ms cubic-bezier(0.6, 0, 0.4, 1),
+    border-color 160ms cubic-bezier(0.6, 0, 0.4, 1),
+    color 160ms cubic-bezier(0.6, 0, 0.4, 1),
+    transform 160ms cubic-bezier(0.6, 0, 0.4, 1);
+}
+.st-btn:active { transform: translateY(1px); }
+.st-btn:focus-visible {
+  outline: 2px solid var(--color-strata-seam);
+  outline-offset: 2px;
+}
+.st-btn[disabled], .st-btn[aria-disabled="true"] { opacity: 0.45; pointer-events: none; }
+.st-btn[data-loading="true"] { pointer-events: none; }
+/* PRESSRUN: the primary CTA is a PRESS BUTTON — letterpress emboss on paper,
+   C-plate border. Hover = the ink spreads (cyan fill). PRESS BOOK §H7. */
+.st-btn-seam {
+  background: var(--color-strata-bone);
+  color: var(--color-strata-ink);
+  border: 2px solid var(--color-strata-seam);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.7),
+    inset 0 -1px 0 rgba(11, 27, 58, 0.12),
+    3px 3px 0 rgba(8, 145, 178, 0.18);
+}
+.st-btn-seam:hover {
+  background: var(--color-strata-seam);
+  color: var(--color-strata-bone);
+  box-shadow: 3px 3px 0 rgba(11, 27, 58, 0.25);
+}
+/* in the ink room the pressed proof GLOWS (wet ink) */
+[data-strata-deep] .st-btn-seam, .st-column-mid .st-btn-seam,
+.st-column-deep .st-btn-seam, .st-column-floor .st-btn-seam,
+.st-submersion .st-btn-seam, .st-plate-deep .st-btn-seam {
+  box-shadow: 0 0 26px rgba(34, 211, 238, 0.3), 3px 3px 0 rgba(0, 0, 0, 0.35);
+}
+.st-btn-hairline { background: transparent; color: var(--color-strata-ink); border-color: var(--color-strata-hairline); }
+.st-btn-hairline:hover { border-color: var(--color-strata-ink-mute); }
+[data-strata-deep] .st-btn-hairline, [data-nav-deep] .st-btn-hairline,
+.st-column-mid .st-btn-hairline, .st-column-deep .st-btn-hairline,
+.st-column-floor .st-btn-hairline, .st-submersion .st-btn-hairline,
+.st-plate-deep .st-btn-hairline { color: #eaf2f7; border-color: var(--color-strata-hairline-deep); }
+/* PRESSRUN: a LIT PROOF is paper inside the dark room — ink chrome wins back */
+.pr-proof .st-btn-hairline, .pr-sheet .st-btn-hairline, .pr-ticket .st-btn-hairline {
+  color: var(--color-strata-ink);
+  border-color: rgba(11, 27, 58, 0.35);
+}
+.pr-proof .st-btn-hairline:hover, .pr-sheet .st-btn-hairline:hover {
+  border-color: var(--color-strata-ink);
+}
+.pr-proof .st-btn-seam, .pr-sheet .st-btn-seam {
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.7),
+    inset 0 -1px 0 rgba(11, 27, 58, 0.12),
+    3px 3px 0 rgba(8, 145, 178, 0.18);
+}
+[data-strata-deep] .st-btn-hairline:hover, [data-nav-deep] .st-btn-hairline:hover,
+.st-column-mid .st-btn-hairline:hover, .st-column-deep .st-btn-hairline:hover,
+.st-column-floor .st-btn-hairline:hover, .st-submersion .st-btn-hairline:hover,
+.st-plate-deep .st-btn-hairline:hover { border-color: var(--color-strata-bone-mute); }
+
+.st-nav-link {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--color-strata-ink-mute);
+  transition: color 160ms cubic-bezier(0.6, 0, 0.4, 1);
+}
+.st-nav-link:hover, .st-nav-link[data-active] { color: var(--color-strata-ink); }
+[data-nav-deep] .st-nav-link { color: var(--color-strata-bone-mute); }
+[data-nav-deep] .st-nav-link:hover, [data-nav-deep] .st-nav-link[data-active] { color: #eaf2f7; }
+.st-nav-bar { background: var(--color-strata-ink); }
+[data-nav-deep] .st-nav-bar { background: #eaf2f7; }
+/* the navy logo mark reads as ink on paper; below the water table it flips to bone */
+header[data-nav-deep] nav a > img { filter: brightness(0) invert(0.96) sepia(0.04); }
+.st-logo-invert img { filter: brightness(0) invert(0.96) sepia(0.04); }
+/* mono marginalia voice for global chrome (Footer renders on all routes) */
+.st-mono-sm {
+  font-family: var(--font-strata-mono), Consolas, Menlo, monospace;
+  font-size: 0.625rem;
+  line-height: 1.4;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  font-variant-numeric: tabular-nums;
+}
+}
+
+/* Offset scroll-to-anchor for fixed navbar */
+html {
+  scroll-padding-top: 6rem;
+}
+
+/* Global craft rules (re-homed from the retired sp-* block — the anchor-
+   offset law every #pricing link + smoothScrollTo(-88) depends on, and the
+   scrollbar-stability rule; tokens.css only loads on the homepage) */
+html {
+  scrollbar-gutter: stable;
+}
+section[id] {
+  scroll-margin-top: 88px;
+}
+
+/* StrataLanding Design System - Premium Landing Page Studio */
+:root {
+  /* Default (Light) Theme - HSL values */
+  --background: 210 33% 98%;
+  /* #F8FAFC */
+  --surface: 0 0% 100%;
+  /* #FFFFFF */
+  --text-primary: 222 47% 11%;
+  /* #0F172A */
+  --text-muted: 215 20% 35%;
+  /* Darker shade for better contrast */
+  --primary: 221 68% 14%;
+  /* #0B1B3A */
+  --accent: 200 80% 32%;
+  /* Darkened for WCAG AA contrast (4.5:1+ on white and bg-accent/10) */
+  --border: 214 32% 91%;
+  /* #E2E8F0 */
+
+  /* Glassmorphism Foundations */
+  --glass-bg: rgba(255, 255, 255, 0.7);
+  --glass-border: rgba(255, 255, 255, 0.3);
+  --glass-blur: 12px;
+
+  /* Spacing - Tighter for premium feel */
+  --space-xs: 4px;
+  --space-sm: 8px;
+  --space-md: 16px;
+  --space-lg: 24px;
+  --space-xl: 32px;
+  --space-2xl: 48px;
+  --space-3xl: 64px;
+  --space-4xl: 80px;
+
+  /* Border Radius */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 20px;
+  --radius-full: 9999px;
+
+  /* Shadows */
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.07), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.05);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+}
+
+
+@theme inline {
+  /* Color mappings to HSL variables */
+  --color-background: hsl(var(--background));
+  --color-surface: hsl(var(--surface));
+  --color-text-primary: hsl(var(--text-primary));
+  --color-text-muted: hsl(var(--text-muted));
+  --color-primary: hsl(var(--primary));
+  --color-accent: hsl(var(--accent));
+  --color-border: hsl(var(--border));
+
+  /* Font fallbacks */
+  --font-heading: var(--font-heading), system-ui;
+  --font-body: var(--font-body), sans-serif;
+}
+
+/* Base styles */
+@layer base {
+body {
+  background-color: var(--color-background);
+  color: var(--color-text-primary);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+}
+
+/* Heading styles - tighter line height */
+@layer base {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+}
+
+h1 {
+  letter-spacing: -0.03em;
+}
+}
+
+/* Glass Card Utility */
+.glass-card {
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--shadow-md);
+}
+
+/* Link styles */
+@layer base {
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* Focus styles for accessibility */
+*:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+/* Selection */
+::selection {
+  background-color: var(--color-accent);
+  color: var(--color-primary);
+}
+}
+
+/* Smooth scrolling + offset for fixed navbar */
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 5rem;
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-background);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-border);
+  border-radius: var(--radius-full);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-text-muted);
+}
+
+/* Container - tighter max-width for premium feel */
+.container {
+  width: 100%;
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
+@media (min-width: 768px) {
+  .container {
+    padding-left: 32px;
+    padding-right: 32px;
+  }
+}
+
+/* Section spacing - TIGHTER for premium density */
+.section {
+  padding-top: 48px;
+  padding-bottom: 48px;
+}
+
+@media (min-width: 768px) {
+  .section {
+    padding-top: 72px;
+    padding-bottom: 72px;
+  }
+}
+
+/* Section with tighter spacing variant */
+.section-tight {
+  padding-top: 40px;
+  padding-bottom: 40px;
+}
+
+@media (min-width: 768px) {
+  .section-tight {
+    padding-top: 56px;
+    padding-bottom: 56px;
+  }
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.5s ease-out forwards;
+}
+
+.animate-slide-up {
+  animation: slideUp 0.6s ease-out forwards;
+}
+
+.animate-shimmer {
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.2) 50%,
+    transparent 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 2s infinite;
+}
+
+/* Stagger delays */
+.stagger-1 {
+  animation-delay: 0.1s;
+}
+
+.stagger-2 {
+  animation-delay: 0.2s;
+}
+
+.stagger-3 {
+  animation-delay: 0.3s;
+}
+
+.stagger-4 {
+  animation-delay: 0.4s;
+}
+
+/* Premium button hover effect */
+.btn-shine {
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-shine::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.2),
+    transparent
+  );
+  transition: left 0.5s ease;
+}
+
+.btn-shine:hover::after {
+  left: 100%;
+}
+
+/* Line clamp utilities */
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.line-clamp-3 {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Focus ring utility */
+.focus-ring {
+  outline: none;
+}
+
+.focus-ring:focus-visible {
+  box-shadow: 0 0 0 3px rgba(8, 145, 178, 0.4);
+}
+
+/* ─── Performance Animation System (compositor-only: transform + opacity) ─── */
+
+@keyframes sl-float {
+  0%, 100% { transform: translateY(calc(var(--sl-d, 15px) * -1)); }
+  50% { transform: translateY(var(--sl-d, 15px)); }
+}
+
+@keyframes sl-rotate {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes sl-rotate-r {
+  to { transform: rotate(-360deg); }
+}
+
+@keyframes sl-pulse-ring {
+  0%, 100% { transform: scale(1); opacity: 0.5; }
+  50% { transform: scale(1.3); opacity: 0; }
+}
+
+@keyframes sl-glitch-a {
+  0%, 100% { transform: translateX(-2px); opacity: 0.8; }
+  50% { transform: translateX(2px); opacity: 0.5; }
+}
+
+@keyframes sl-glitch-b {
+  0%, 100% { transform: translateX(2px); opacity: 0.5; }
+  50% { transform: translateX(-2px); opacity: 0.8; }
+}
+
+@keyframes sl-shine {
+  from { transform: translateX(-100%); }
+  to { transform: translateX(200%); }
+}
+
+@keyframes sl-particle {
+  0%, 100% { transform: translateY(-20px) scale(1); opacity: 0.3; }
+  50% { transform: translateY(20px) scale(1.5); opacity: 0.8; }
+}
+
+@keyframes sl-bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(6px); }
+}
+
+@keyframes sl-pulse {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.3); opacity: 0.7; }
+}
+
+@keyframes sl-arrow-bounce {
+  0%, 100% { transform: translateX(0); }
+  50% { transform: translateX(5px); }
+}
+
+@keyframes sl-cursor-blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+/* Vertical light sweep (mobile deal-rail flow) */
+@keyframes sl-flow-y {
+  from { transform: translateY(-120%); }
+  to { transform: translateY(360%); }
+}
+
+/* One-shot boot scanline (HUD console power-on) — transform-only, no layout */
+@keyframes sl-scan-y {
+  0% { transform: translateY(-10%); opacity: 0; }
+  10% { opacity: 0.9; }
+  90% { opacity: 0.9; }
+  100% { transform: translateY(2600%); opacity: 0; }
+}
+
+/* Utility classes for CSS infinite animations */
+.sl-float { animation: sl-float var(--sl-dur, 4s) ease-in-out infinite; animation-delay: var(--sl-delay, 0s); }
+.sl-rotate { animation: sl-rotate var(--sl-dur, 20s) linear infinite; }
+.sl-rotate-r { animation: sl-rotate-r var(--sl-dur, 20s) linear infinite; }
+.sl-pulse-ring { animation: sl-pulse-ring var(--sl-dur, 2s) ease-in-out infinite; animation-delay: var(--sl-delay, 0s); }
+.sl-glitch-a { animation: sl-glitch-a 0.2s ease-in-out infinite alternate; }
+.sl-glitch-b { animation: sl-glitch-b 0.2s ease-in-out infinite alternate; }
+.sl-shine { animation: sl-shine 2.5s ease-in-out infinite; animation-delay: var(--sl-delay, 4s); }
+.sl-particle { animation: sl-particle var(--sl-dur, 3s) ease-in-out infinite; animation-delay: var(--sl-delay, 0s); }
+.sl-bounce { animation: sl-bounce 1.5s ease-in-out infinite; }
+.sl-pulse { animation: sl-pulse 2s ease-in-out infinite; }
+.sl-arrow-bounce { animation: sl-arrow-bounce 1.5s ease-in-out infinite; }
+.sl-cursor-blink { animation: sl-cursor-blink 0.8s step-end infinite; }
+.sl-flow-y { animation: sl-flow-y 3s ease-in-out infinite; animation-delay: var(--sl-delay, 1.5s); }
+.sl-scan-y { animation: sl-scan-y 1.6s ease-in-out 1 both; animation-delay: var(--sl-delay, 0.2s); }
+
+/* ============================================================
+   Preview gate ("The Premiere") entrances — compositor-only.
+   .pv-rise is transform-only (safe on LCP text: visible at first paint);
+   .pv-up fades small non-LCP elements in. Delay via --pv-delay.
+   ============================================================ */
+@keyframes pv-rise {
+  from { transform: translateY(18px); }
+  to { transform: translateY(0); }
+}
+@keyframes pv-up {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.pv-rise { animation: pv-rise 0.8s cubic-bezier(0.22, 1, 0.36, 1) both; animation-delay: var(--pv-delay, 0s); }
+.pv-up { animation: pv-up 0.7s cubic-bezier(0.22, 1, 0.36, 1) both; animation-delay: var(--pv-delay, 0s); }
+@media (prefers-reduced-motion: reduce) {
+  .pv-rise, .pv-up { animation: none; }
+}
+
+/* ============================================================
+   Command Seal gate — "The Unsealing" entrance + ambience.
+   One-shot theatrical entrance (~2s). Compositor-only except the
+   eyebrow letter-tracking settle (tiny element, runs once).
+   The LCP h1 uses cs-stamp: transform+filter, text painted frame 1.
+   Decorative one-shot overlays (beam/ring/sweep) carry inline
+   opacity:0 so reduced-motion's animation:none leaves them invisible.
+   ============================================================ */
+@keyframes cs-stamp {
+  0% { transform: scale(1.16) translateY(12px); filter: blur(7px); }
+  62% { transform: scale(0.988) translateY(0); filter: blur(0); }
+  100% { transform: scale(1) translateY(0); filter: blur(0); }
+}
+@keyframes cs-ring {
+  0% { opacity: 0; transform: scale(0.5); }
+  22% { opacity: 0.85; }
+  100% { opacity: 0; transform: scale(1.65); }
+}
+@keyframes cs-beam {
+  0% { opacity: 0; transform: translateX(-140%) skewX(-18deg); }
+  22% { opacity: 1; }
+  100% { opacity: 0; transform: translateX(240%) skewX(-18deg); }
+}
+@keyframes cs-sweep {
+  0% { opacity: 0; transform: translateX(-160%) skewX(-16deg); }
+  16% { opacity: 1; }
+  100% { opacity: 0; transform: translateX(280%) skewX(-16deg); }
+}
+@keyframes cs-track-in {
+  from { opacity: 0; letter-spacing: 0.6em; }
+  to { opacity: 1; letter-spacing: 0.32em; }
+}
+@keyframes cs-frame-in {
+  from { opacity: 0; transform: perspective(1300px) rotateX(11deg) scale(0.94) translateY(36px); }
+  to { opacity: 1; transform: perspective(1300px) rotateX(0deg) scale(1) translateY(0); }
+}
+@keyframes cs-aurora {
+  0% { transform: translate3d(-5%, -4%, 0) rotate(0deg) scale(1); }
+  50% { transform: translate3d(4%, 3%, 0) rotate(7deg) scale(1.08); }
+  100% { transform: translate3d(-5%, -4%, 0) rotate(0deg) scale(1); }
+}
+@keyframes cs-shimmer {
+  0% { opacity: 0; transform: translateX(-130%) skewX(-20deg); }
+  18% { opacity: 1; }
+  100% { opacity: 0; transform: translateX(260%) skewX(-20deg); }
+}
+@keyframes cs-border-spin { to { transform: rotate(1turn); } }
+
+.cs-stamp { animation: cs-stamp 0.95s cubic-bezier(0.16, 1, 0.3, 1) both; animation-delay: var(--cs-delay, 0.25s); }
+.cs-ring { animation: cs-ring 1.15s cubic-bezier(0.16, 1, 0.3, 1) both; animation-delay: var(--cs-delay, 0.85s); }
+.cs-beam { animation: cs-beam 1.2s cubic-bezier(0.6, 0.05, 0.3, 1) both; animation-delay: var(--cs-delay, 0.1s); }
+.cs-sweep { animation: cs-sweep 1.15s cubic-bezier(0.55, 0.06, 0.25, 1) both; animation-delay: var(--cs-delay, 1.45s); }
+.cs-track-in { animation: cs-track-in 0.95s cubic-bezier(0.22, 1, 0.36, 1) both; animation-delay: var(--cs-delay, 0.12s); }
+.cs-frame-in { animation: cs-frame-in 1.15s cubic-bezier(0.16, 1, 0.3, 1) both; animation-delay: var(--cs-delay, 0.55s); }
+.cs-aurora { animation: cs-aurora 26s ease-in-out infinite; }
+.cs-shimmer { animation: cs-shimmer 1.3s cubic-bezier(0.55, 0.06, 0.25, 1) both; animation-delay: var(--cs-delay, 1.7s); }
+.cs-border-spin { animation: cs-border-spin 4.5s linear infinite; }
+@media (prefers-reduced-motion: reduce) {
+  .cs-stamp, .cs-ring, .cs-beam, .cs-sweep, .cs-track-in, .cs-frame-in,
+  .cs-aurora, .cs-shimmer, .cs-border-spin { animation: none; }
+}
+
+/* ============================================================
+   Letterhead gate — a typeset letter on the desk.
+   ONE composed entrance, compositor-only (transform/opacity/filter).
+
+   TIMELINE (seconds — each beat maps to a delay here or an inline
+   --pv-delay/--lh-delay/--cs-delay in Letterhead.tsx):
+   0.00–0.55  SHEET     the letter is placed on the desk (rises 24px,
+                        overshoots 2px, settles) — transform-only
+                        WRAPPER, the h1 LCP inside paints at frame one.
+   0.05–0.70  NAME      ink settles into the masthead.
+   0.08–0.40  POSTMARK  stamps down (1.28 → 0.97 slam → 1). Trust
+                        chrome fully settled before anything else moves.
+   0.30–0.85  RULE      the Scotch rule draws left → right.
+   0.45/0.62/0.79       letter lines rise at reading pace.
+   0.70–1.35  POLAROID  the front print lays down (−5° → −2°)…
+   0.95–2.20  DEVELOP   …and develops: overexposed → warm sepia murk
+                        → color (real instant-film chemistry).
+   1.00–1.85  2ND PRINT the phone print is set down behind, fanned +7°,
+                        developing on its own clock (1.30–2.55).
+   2.10/2.22/2.34       lab-result cells print, one at a time; caption 2.42.
+   2.35       "View your new website" rises (settled ≈3.05).
+   2.50/2.62/2.74       the QUESTION: heading → verdict buttons → lock line.
+   2.90       sign-off appears; 3.15–3.95 the flourish DRAWS under "Caesar".
+   3.60       CTA sheen fires ONCE, after the letter has gone still.
+
+   Return-from-tab "lit ink" (data-spot): the letter dims AND softens
+   (blur 1px — attention, not a glitch), the cyan underline draws after
+   the dim lands (0.12s), the question heading breathes +2% once.
+   Reduced-motion: everything instant and VISIBLE (prints included).
+   ============================================================ */
+@keyframes lh-sheet {
+  0% { transform: translateY(24px); }
+  72% { transform: translateY(-2px); }
+  100% { transform: translateY(0); }
+}
+@keyframes lh-settle {
+  from { transform: translateY(10px) scale(0.99); }
+  to { transform: translateY(0) scale(1); }
+}
+@keyframes lh-stamp {
+  0% { transform: rotate(8deg) scale(1.28); opacity: 0; }
+  58% { transform: rotate(8deg) scale(0.97); opacity: 0.78; }
+  82% { transform: rotate(8deg) scale(1.015); opacity: 0.78; }
+  100% { transform: rotate(8deg) scale(1); opacity: 0.78; }
+}
+@keyframes lh-rule-draw {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
+@keyframes lh-lay {
+  from { opacity: 0; transform: rotate(-5deg) translateY(18px); }
+  to { opacity: 1; transform: rotate(-2deg) translateY(0); }
+}
+/* The second print is set down a beat later, fanned the other way */
+@keyframes lh-lay-back {
+  from { opacity: 0; transform: rotate(11deg) translate3d(10px, 14px, 0); }
+  to { opacity: 1; transform: rotate(7deg) translate3d(0, 0, 0); }
+}
+/* Develop v2 — brightness collapses first, color arrives last, and a warm
+   sepia cast burns off in the middle (real emulsion chemistry) */
+@keyframes lh-develop {
+  0% { filter: brightness(1.7) saturate(0) sepia(0.25) contrast(0.7); }
+  55% { filter: brightness(1.12) saturate(0.65) sepia(0.12) contrast(0.96); }
+  100% { filter: brightness(1) saturate(1) sepia(0) contrast(1); }
+}
+@keyframes lh-underline {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
+@keyframes lh-ask-pulse {
+  0% { transform: scale(1); }
+  38% { transform: scale(1.02); }
+  100% { transform: scale(1); }
+}
+/* Signature flourish — a pen stroke that draws itself. The path carries
+   pathLength=1 + dasharray=1, so offset 1→0 is the full draw; the BASE
+   state is drawn, so reduced-motion's animation:none shows the stroke. */
+@keyframes lh-sign {
+  from { stroke-dashoffset: 1; }
+  to { stroke-dashoffset: 0; }
+}
+/* `backwards` fill (not `both`) on sheet/name/stamp/rule: after the run the
+   computed transform returns to the base value — no stale containing block
+   from a filled transform and no dead-hover surprises later. */
+.lh-sheet { animation: lh-sheet 0.55s cubic-bezier(0.22, 1, 0.36, 1) backwards; }
+.lh-settle { animation: lh-settle 0.65s cubic-bezier(0.22, 1, 0.36, 1) backwards; animation-delay: 0.05s; }
+.lh-stamp {
+  /* base = final + reduced-motion state (the svg carries no inline transform/opacity) */
+  transform: rotate(8deg);
+  opacity: 0.78;
+  animation: lh-stamp 0.32s cubic-bezier(0.3, 0.7, 0.4, 1) backwards;
+  animation-delay: 0.08s;
+}
+.lh-rule { transform-origin: left; animation: lh-rule-draw 0.55s cubic-bezier(0.22, 1, 0.36, 1) backwards; animation-delay: 0.3s; }
+.lh-lay { opacity: 0; animation: lh-lay 0.65s cubic-bezier(0.16, 1, 0.3, 1) both; animation-delay: var(--lh-delay, 0.7s); }
+.lh-lay-back { opacity: 0; animation: lh-lay-back 0.85s cubic-bezier(0.16, 1, 0.3, 1) both; animation-delay: var(--lh-delay, 1s); }
+.lh-develop { animation: lh-develop 1.25s cubic-bezier(0.55, 0.04, 0.3, 1) both; animation-delay: var(--lh-delay, 0.95s); }
+.lh-underline { transform-origin: left; animation: lh-underline 0.7s cubic-bezier(0.22, 1, 0.36, 1) both; animation-delay: 0.12s; }
+.lh-askpulse { display: inline-block; transform-origin: left center; animation: lh-ask-pulse 0.9s cubic-bezier(0.22, 1, 0.36, 1) backwards; animation-delay: 0.15s; }
+.lh-sign { animation: lh-sign 0.8s cubic-bezier(0.65, 0, 0.35, 1) both; animation-delay: 3.15s; }
+/* Return-from-tab "lit ink" spotlight: the letter dims and softens; the question stays ink */
+.lh-dim { transition: opacity 0.5s ease, filter 0.5s ease; }
+[data-spot='1'] .lh-dim { opacity: 0.4; filter: blur(1px); }
+@media (prefers-reduced-motion: reduce) {
+  .lh-sheet, .lh-settle, .lh-stamp, .lh-rule, .lh-lay, .lh-lay-back,
+  .lh-develop, .lh-underline, .lh-askpulse, .lh-sign { animation: none; }
+  /* without these the prints were stuck at opacity 0 for reduced-motion users */
+  .lh-lay { opacity: 1; transform: rotate(-2deg); }
+  .lh-lay-back { opacity: 1; transform: rotate(7deg); }
+  .lh-dim { transition: none; }
+  [data-spot='1'] .lh-dim { filter: none; }
+}
+
+/* Pause animations when off-screen via data attribute */
+[data-sl-paused="true"] .sl-float,
+[data-sl-paused="true"] .sl-rotate,
+[data-sl-paused="true"] .sl-rotate-r,
+[data-sl-paused="true"] .sl-pulse-ring,
+[data-sl-paused="true"] .sl-glitch-a,
+[data-sl-paused="true"] .sl-glitch-b,
+[data-sl-paused="true"] .sl-shine,
+[data-sl-paused="true"] .sl-particle,
+[data-sl-paused="true"] .sl-bounce,
+[data-sl-paused="true"] .sl-pulse,
+[data-sl-paused="true"] .sl-arrow-bounce,
+[data-sl-paused="true"] .sl-cursor-blink,
+[data-sl-paused="true"] .sl-flow-y,
+[data-sl-paused="true"] .sl-scan-y {
+  animation-play-state: paused;
+}
+
+/* ─── Admin motion tokens + premium utilities ─── */
+:root {
+  --ease-out: cubic-bezier(0, 0, 0.2, 1);
+  --ease-emphasized: cubic-bezier(0.2, 0, 0, 1);
+  --dur-fast: 120ms;
+  --dur-default: 200ms;
+  --dur-slow: 320ms;
+}
+
+/* Slow brand gradient pan — for the route progress bar + live accents */
+@keyframes admin-gradient-pan {
+  0% { background-position: 0% 50%; }
+  100% { background-position: 200% 50%; }
+}
+.admin-gradient-pan {
+  background-size: 200% 200%;
+  animation: admin-gradient-pan 5s linear infinite;
+}
+
+/* Slow rotation — conic sheen behind KPI icons */
+@keyframes admin-spin-slow { to { transform: rotate(360deg); } }
+.admin-spin-slow { animation: admin-spin-slow 9s linear infinite; }
+
+@media (prefers-reduced-motion: reduce) {
+  .admin-gradient-pan,
+  .admin-spin-slow { animation: none; }
+}
+
+/* ─── Skeleton loading blocks (admin) ─── */
+@keyframes skeleton-sweep {
+  100% { transform: translateX(100%); }
+}
+
+.skeleton {
+  position: relative;
+  overflow: hidden;
+  background-color: hsl(var(--border) / 0.55);
+  border-radius: var(--radius-sm);
+}
+
+.skeleton::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.6),
+    transparent
+  );
+  animation: skeleton-sweep 1.5s infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .skeleton::after { animation: none; }
+}
+
+/* Accessibility widget styles are injected at runtime via JavaScript.
+   See AccessibilityWidget.tsx — applySettings() creates a <style> tag. */
+
+/* ============================================================
+   Liquid interaction utilities (scroll/cursor "water" motion)
+   Cohesive with the locked WebGL water — transform-only, cheap.
+   ============================================================ */
+
+/* ============================================================
+   Admin micro-interaction keyframes (Pressable ripple,
+   SuccessCheck pop) + tabular-number utility.
+   Appended for the admin motion foundation — color tokens
+   untouched. Animations disabled under reduced-motion.
+   ============================================================ */
+@keyframes admin-ripple {
+  from { transform: scale(0); opacity: 0.5; }
+  to { transform: scale(2.5); opacity: 0; }
+}
+
+@keyframes admin-check-pop {
+  0% { transform: scale(0.6); opacity: 0; }
+  60% { transform: scale(1.08); }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.admin-tabular { font-variant-numeric: tabular-nums; }
+
+@media (prefers-reduced-motion: reduce) {
+  .admin-ripple,
+  .admin-check-pop {
+    animation: none !important;
+  }
+}

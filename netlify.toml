@@ -1,0 +1,100 @@
+[build]
+  command = "npm run build"
+  publish = ".next"
+
+[build.environment]
+  NODE_VERSION = "22"
+
+# Pin the Next.js runtime explicitly — never rely on auto-detection drift.
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
+
+# Strata world art — baked assets, immutable until re-baked
+[[headers]]
+  for = "/specimen/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/strata/reel/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+# Brand assets — immutable, cache forever
+[[headers]]
+  for = "/brand/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+# Icons — immutable
+[[headers]]
+  for = "/icons/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+# Next.js static assets — immutable (hashed filenames)
+[[headers]]
+  for = "/_next/static/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+# Sitemap — cache for 1 hour
+[[headers]]
+  for = "/sitemap.xml"
+  [headers.values]
+    Cache-Control = "public, max-age=3600"
+
+# Robots.txt — cache for 1 day
+[[headers]]
+  for = "/robots.txt"
+  [headers.values]
+    Cache-Control = "public, max-age=86400"
+
+# Manifest — cache for 1 day
+[[headers]]
+  for = "/manifest.json"
+  [headers.values]
+    Cache-Control = "public, max-age=86400"
+
+# Security headers (defense-in-depth, applied at CDN edge)
+# SECURITY (audit F48): mirror the full header set — including CSP — so responses served only by
+# the Netlify CDN (not Next.js) still ship with them. Keep the CSP in sync with next.config.ts.
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Content-Type-Options = "nosniff"
+    X-Frame-Options = "SAMEORIGIN"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    # AUDIT 2026-08-12 (P3): `payment=()` disabled the Payment Request API outright. PayPal's
+    # SDK can use it for wallet funding, so a blanket denial risks silently removing funding
+    # options at checkout — on the one page where that costs money. Allow it for us and PayPal
+    # only. Kept byte-identical to next.config.ts so CDN-served and Next-served responses agree.
+    Permissions-Policy = 'camera=(), microphone=(), geolocation=(), usb=(), magnetometer=(), accelerometer=(), gyroscope=(), payment=(self "https://www.paypal.com" "https://www.sandbox.paypal.com")'
+    Strict-Transport-Security = "max-age=63072000; includeSubDomains; preload"
+    Cross-Origin-Opener-Policy = "same-origin-allow-popups"
+    X-DNS-Prefetch-Control = "off"
+    # AUDIT 2026-08-12: CSP intentionally NOT set here. src/proxy.ts issues a per-request nonce
+    # policy; a second static CSP at the CDN would be enforced as an intersection and would block
+    # the nonce'd scripts this app needs.
+
+# Keep sensitive areas out of search indexes entirely (enforced header, not just
+# robots.txt) so attackers can't discover admin/portal/partner URLs via search dorks.
+[[headers]]
+  for = "/admin/*"
+  [headers.values]
+    X-Robots-Tag = "noindex, nofollow, noarchive, nosnippet"
+
+[[headers]]
+  for = "/times/*"
+  [headers.values]
+    X-Robots-Tag = "noindex, nofollow, noarchive, nosnippet"
+
+[[headers]]
+  for = "/portal/*"
+  [headers.values]
+    X-Robots-Tag = "noindex, nofollow, noarchive, nosnippet"
+
+[[headers]]
+  for = "/partner-portal/*"
+  [headers.values]
+    X-Robots-Tag = "noindex, nofollow, noarchive, nosnippet"

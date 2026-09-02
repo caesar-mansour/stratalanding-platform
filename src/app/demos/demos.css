@@ -1,0 +1,7 @@
+/* Tailwind utilities for the demo routes ONLY.
+   The global sheet (src/app/globals.css) excludes ./demos via `@source not`, so
+   this sheet carries every utility the 793 demo pages use. It loads only on
+   /demos/* (imported by src/app/demos/layout.tsx) — the rest of the app stays lean.
+   Custom @theme tokens (bg-surface, text-text-muted, …) still come from the global
+   sheet, which loads on demo pages too. */
+@import "tailwindcss" source("./");

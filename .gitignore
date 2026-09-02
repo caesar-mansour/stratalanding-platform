@@ -1,0 +1,84 @@
+# dependencies
+/node_modules
+/.pnp
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/versions
+
+# testing
+/coverage
+
+# next.js
+/.next/
+/.next-prod/
+/out/
+
+# production
+/build
+
+# misc
+.DS_Store
+Thumbs.db
+*.pem
+*.key
+*.p12
+*.pfx
+
+# debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# ── Environment / secrets — NEVER commit ──────────────────────────────────────
+# .env.example is the only env file that belongs in version control.
+.env
+.env.*
+!.env.example
+*.local
+
+# uploaded files
+/public/uploads
+
+# typescript
+*.tsbuildinfo
+next-env.d.ts
+
+# hosting
+.vercel
+.netlify
+
+# ── Private / non-public working material ────────────────────────────────────
+# Business records, prospect data, outreach material and local scratch work.
+# None of this belongs in a public repository.
+/brain/
+/acq/
+/ai-caller/
+/call-assist/
+/spec-builds/
+/custom-prompts/
+/instagram-content/
+/_studio/
+/_wip/
+/_backups/
+/_deprecated_app/
+/stratalanding/
+/public/preview-shots/
+
+# editor / local tooling state
+/.obsidian/
+/.idea/
+/.vscode/
+*.code-workspace
+
+# scratch / capture artefacts
+_*.png
+shot_*.png
+/_preview-shots/
+/_ultra_shots/
+*.bak
+*.old
+*.tmp

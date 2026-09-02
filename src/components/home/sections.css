@@ -1,0 +1,171 @@
+/* ============================================================================
+ * S3 · S4 · S5 — three bands, three DIFFERENT internal structures.
+ * Three consecutive card grids read as a UI kit; a seamed grid, then a ruled
+ * table, then a full-bleed inversion gives the scroll three real rhythms.
+ * Zero box-shadow, zero component gradient, zero hover transform.
+ * ========================================================================== */
+
+.one-sec { padding-block: var(--gap-section); border-top: 1px solid var(--rule); }
+.one-sec--alt { background: var(--surface-2); }
+
+.one-secHead { display: grid; gap: 14px; margin-bottom: 40px; max-width: 760px; }
+.one-secHead--row {
+  grid-template-columns: auto 1fr;
+  align-items: baseline;
+  gap: 28px;
+  max-width: none;
+}
+.one-secHead__lead { font-size: 16px; line-height: 1.5; color: var(--ink-2); margin: 0; max-inline-size: 62ch; }
+.one-eyebrow--dark { color: var(--ink-on-dark-2); }
+.one-eyebrow--dark .one-eyebrow__no { color: rgb(159 176 200 / 60%); }
+.one-h2--dark { color: var(--ink-on-dark); }
+
+/* ── S3 — THE SEAMED GRID ────────────────────────────────────────────────
+ * gap:0 with hairlines ON the cell borders. Helloivy: "a strong, visible grid
+ * system using fine 1px borders that divide the page into distinct, almost
+ * cell-like blocks." Gapped cards floating in a field is what a component
+ * preview looks like; seamed compartments are what a page looks like.
+ * ---------------------------------------------------------------------- */
+.one-seam {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0;
+  border: 1px solid var(--rule);
+  border-radius: var(--r-plate);
+  overflow: hidden;
+  background: var(--plate);
+}
+.one-seam__cell {
+  display: grid;
+  align-content: start;
+  gap: 8px;
+  padding: 28px 24px 24px;
+  border-right: 1px solid var(--rule);
+  text-decoration: none;
+  color: var(--ink-2);
+  /* hover moves a SURFACE, never a transform */
+  transition: background-color 0.2s ease;
+}
+.one-seam__cell:last-child { border-right: 0; }
+.one-seam__cell:hover { background: var(--surface-2); }
+.one-seam__no {
+  font-family: var(--font-mono);
+  font-size: 11px; letter-spacing: 0.12em; color: var(--ink-4);
+}
+.one-seam__t {
+  font-family: var(--font-display);
+  font-size: 20px; font-weight: 500; letter-spacing: -0.02em; color: var(--ink);
+}
+.one-seam__d { font-size: 14px; line-height: 1.45; color: var(--ink-3); }
+.one-seam__specs { display: grid; gap: 4px; margin-top: 10px; padding-top: 12px; border-top: 1px solid var(--rule); }
+.one-seam__spec {
+  font-family: var(--font-mono);
+  font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-3);
+}
+
+/* ── S4 — THE RULED TABLE ────────────────────────────────────────────────
+ * 19–86 builds an entire page on 1px rules and tabular alignment. A ruled table
+ * has no radius, no fill and no elevation to get wrong.
+ * ---------------------------------------------------------------------- */
+.one-table { border-top: 1px solid var(--rule); }
+.one-table__head,
+.one-table__row {
+  display: grid;
+  grid-template-columns: 120px 280px 1fr 120px;
+  gap: 24px;
+  align-items: baseline;
+  border-bottom: 1px solid var(--rule);
+}
+.one-table__head {
+  padding-block: 10px;
+  font-family: var(--font-mono);
+  font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-4);
+}
+.one-ta-r { text-align: right; }
+.one-table__row { padding-block: 20px; transition: border-color 0.2s ease; }
+.one-table__row:hover { border-bottom-color: var(--ink-4); }
+.one-table__d { font-size: 13px; letter-spacing: 0.04em; text-transform: uppercase; color: var(--signal); }
+.one-table__t { font-size: 17px; font-weight: 600; color: var(--ink); letter-spacing: -0.02em; }
+.one-table__y { font-size: 15px; line-height: 1.45; color: var(--ink-2); }
+.one-table__s { font-size: 13px; color: var(--ink-3); text-align: right; letter-spacing: 0.02em; }
+
+/* ── S5 — THE NAVY BAND ──────────────────────────────────────────────────
+ * The page's one full-bleed inversion, and it carries the prices. Brand navy.
+ * ---------------------------------------------------------------------- */
+.one-pit {
+  background: var(--plate-dark);
+  color: var(--ink-on-dark-2);
+  padding-block: 80px;
+}
+.one-tiers { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+.one-tier {
+  position: relative;
+  display: grid;
+  /* name · price · meta · list(1fr) · cta — the 1fr on the list pins all three
+     CTAs to the same baseline regardless of how many features a tier lists. */
+  grid-template-rows: auto auto auto 1fr auto;
+  gap: 12px;
+  padding: 28px 26px 26px;
+  border: 1px solid var(--rule-on-dark);
+  border-radius: var(--r-plate);
+  transition: border-color 0.2s ease;
+}
+.one-tier:hover { border-color: rgb(244 247 251 / 32%); }
+/* The recommended tier is marked by a SURFACE TONE STEP at identical geometry —
+   never a badge fill, never a colour block, never a scale change. */
+.one-tier.is-pick { background: rgb(244 247 251 / 5%); border-color: rgb(244 247 251 / 26%); }
+.one-tier__pick {
+  position: absolute;
+  top: -1px; right: 20px;
+  transform: translateY(-50%);
+  padding: 3px 10px;
+  background: var(--plate-dark);
+  font-family: var(--font-mono);
+  font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--signal);       /* one of the accent's four permitted uses */
+}
+.one-tier__name {
+  font-family: var(--font-display);
+  font-size: 20px; font-weight: 500; letter-spacing: -0.02em; color: var(--ink-on-dark);
+}
+.one-price--dark { color: var(--ink-on-dark); }
+.one-tier__meta { font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-on-dark-2); }
+.one-tier__list {
+  list-style: none;
+  margin: 8px 0 4px;
+  padding: 14px 0 0;
+  border-top: 1px solid var(--rule-on-dark);
+  display: grid;
+  gap: 7px;
+  font-size: 14px;
+  line-height: 1.45;
+  color: var(--ink-on-dark-2);
+}
+/* All three tier CTAs are ghost — the page's one ink fill lives in the hero. */
+.one-cta--onDark {
+  background: transparent;
+  color: var(--ink-on-dark);
+  border: 1px solid var(--rule-on-dark);
+  margin-top: 8px;
+  justify-self: start;
+}
+.one-cta--onDark:hover { border-color: var(--ink-on-dark); }
+.one-pit__foot { margin: 32px 0 0; font-size: 14px; color: var(--ink-on-dark-2); }
+.one-link--dark { color: var(--ink-on-dark); }
+.one-link--dark:hover { text-decoration-color: var(--ink-on-dark); }
+
+/* ── RESPONSIVE ────────────────────────────────────────────────────────── */
+@media (max-width: 1100px) {
+  .one-seam { grid-template-columns: repeat(2, 1fr); }
+  .one-seam__cell:nth-child(2n) { border-right: 0; }
+  .one-seam__cell:nth-child(-n + 2) { border-bottom: 1px solid var(--rule); }
+  .one-tiers { grid-template-columns: 1fr; }
+  .one-table__head { display: none; }
+  .one-table__row { grid-template-columns: 100px 1fr; gap: 6px 16px; }
+  .one-table__s { text-align: left; }
+}
+@media (max-width: 700px) {
+  .one-seam { grid-template-columns: 1fr; }
+  .one-seam__cell { border-right: 0; border-bottom: 1px solid var(--rule); }
+  .one-secHead--row { grid-template-columns: 1fr; gap: 12px; }
+}

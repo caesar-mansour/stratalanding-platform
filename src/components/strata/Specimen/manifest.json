@@ -1,0 +1,68 @@
+{
+  "frame": {
+    "w": 1180,
+    "h": 780
+  },
+  "plate": {
+    "w": 840,
+    "h": 240,
+    "projected": {
+      "w": 747,
+      "h": 648
+    }
+  },
+  "stage": {
+    "left": 300,
+    "top": 540
+  },
+  "thickness": 16,
+  "assembledGapPx": 26,
+  "cleavedGapPx": 96,
+  "slabs": [
+    {
+      "code": "ST.01",
+      "name": "THE CLAIM",
+      "file": "/specimen/slab-01.webp"
+    },
+    {
+      "code": "ST.02",
+      "name": "THE DESIGN",
+      "file": "/specimen/slab-02.webp"
+    },
+    {
+      "code": "ST.03",
+      "name": "THE MOTION",
+      "file": "/specimen/slab-03.webp"
+    },
+    {
+      "code": "ST.04",
+      "name": "THE SPEED",
+      "file": "/specimen/slab-04.webp"
+    },
+    {
+      "code": "ST.05",
+      "name": "THE PROOF",
+      "file": "/specimen/slab-05.webp"
+    },
+    {
+      "code": "ST.06",
+      "name": "THE MECHANICS",
+      "file": "/specimen/slab-06.webp"
+    },
+    {
+      "code": "ST.07",
+      "name": "THE MEASUREMENT",
+      "file": "/specimen/slab-07.webp"
+    },
+    {
+      "code": "ST.08",
+      "name": "THE FOUNDATION",
+      "file": "/specimen/slab-08.webp"
+    }
+  ],
+  "assembled": {
+    "file": "/specimen/assembled.webp",
+    "w": 1180,
+    "h": 962
+  }
+}
